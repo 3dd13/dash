@@ -1,0 +1,26 @@
+%h1 Listing cams
+
+= link_to 'New Cam', new_cam_path
+
+%table
+  %tr
+    %th Location
+    %th Latitude
+    %th Longitude
+    %th Uri
+    %th
+    %th
+    %th
+
+  - @cams.each do |cam|
+    %tr
+      %td= cam.location
+      %td= cam.latitude
+      %td= cam.longitude
+      %td= cam.uri
+      %td= link_to 'Show', cam
+      %td= link_to 'Edit', edit_cam_path(cam)
+      %td= link_to 'Destroy', cam, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
