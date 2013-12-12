@@ -43,3 +43,10 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+gem "haml-rails", "~> 0.5.1"
+
+# less-bootstrap-rails and dependencies
+gem 'therubyracer'
+gem 'jquery-rails'
+gem 'less-rails-bootstrap'
