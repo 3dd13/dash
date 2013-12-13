@@ -1,0 +1,8 @@
+.cam
+  = image_tag cam.uri
+  .location
+    = cam.location
+  %ul.edit
+    %li= link_to 'Show', cam
+    %li= link_to 'Edit', edit_cam_path(cam)
+    %li= link_to 'Destroy', cam, :method => :delete, :data => { :confirm => 'Are you sure?' }
