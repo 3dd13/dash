@@ -1,4 +1,7 @@
 Sitemon::Application.routes.draw do
+
+  get 'cams/table' => 'cams#table'
+
   resources :cams
 
   # The priority is based upon order of creation: first created -> highest priority.

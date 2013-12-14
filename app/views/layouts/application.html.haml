@@ -1,17 +1,17 @@
 !!! 5
 %html
-%head
-  %title Dash
-  = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
-  = javascript_include_tag "application", "data-turbolinks-track" => true
-  = csrf_meta_tags
+  %head
+    %title Dash
+    = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    = csrf_meta_tags
 
-%body
-  = render '/layouts/navbar'
+  %body
+    = render '/layouts/navbar'
 
-  .container
-    = yield
+    .container
+      = yield
 
-  .container
-    %footer
-      %p© Company 2013
+    .container
+      %footer
+        %p © Company 2013

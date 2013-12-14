@@ -7,6 +7,10 @@ class CamsController < ApplicationController
     @cams = Cam.all
   end
 
+  def table
+    @cams = Cam.all
+  end
+
   # GET /cams/1
   # GET /cams/1.json
   def show

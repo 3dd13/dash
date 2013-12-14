@@ -3,6 +3,9 @@
   .location
     = cam.location
   %ul.edit
-    %li= link_to 'Show', cam
-    %li= link_to 'Edit', edit_cam_path(cam)
-    %li= link_to 'Destroy', cam, :method => :delete, :data => { :confirm => 'Are you sure?' }
+    %li
+      = link_to edit_cam_path(cam) do
+        %i.glyphicon.glyphicon-pencil
+    %li
+      = link_to cam_path(cam), :method => :delete, :data => { :confirm => 'Are you sure?' } do
+        %i.glyphicon.glyphicon-remove

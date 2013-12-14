@@ -1,0 +1,28 @@
+.page-header
+  %h2
+    Traffic Cameras
+    %a.btn.btn-primary.active.pull-right{ :href => cams_path } Tumbnails
+    %a.btn.btn-primary.active.pull-right{ :href => new_cam_path } + New Cam
+
+%table.table
+  %tr
+    %th Location
+    %th Latitude
+    %th Longitude
+    %th Uri
+    %t
+    %th
+    %th
+
+  - @cams.each do |cam|
+    %tr
+      %td= cam.location
+      %td= cam.latitude
+      %td= cam.longitude
+      %td= cam.uri
+      %td
+        = link_to edit_cam_path(cam), :class => "btn btn-default btn-xs active" do
+          %i.glyphicon.glyphicon-pencil
+      %td
+        = link_to cam, :method => :delete, :class => "btn btn-danger btn-xs active", :data => { :confirm => 'Are you sure?' } do
+          %i.glyphicon.glyphicon-remove
