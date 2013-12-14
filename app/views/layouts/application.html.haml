@@ -8,6 +8,10 @@
 
   %body
     = render '/layouts/navbar'
+    - if notice
+      %p.notice.alert.alert-info= notice
+    - if alert
+      %p.alert.alert.alert-warning= alert
 
     .container
       = yield
