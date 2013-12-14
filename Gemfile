@@ -50,3 +50,5 @@ gem "haml-rails", "~> 0.5.1"
 gem 'therubyracer'
 gem 'jquery-rails'
 gem 'less-rails-bootstrap'
+
+gem 'devise'
