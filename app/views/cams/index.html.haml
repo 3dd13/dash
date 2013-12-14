@@ -1,7 +1,9 @@
-%h1 Listing cams
+.page-header
+  %h2
+    Traffic Cameras
+    %a.btn.btn-primary.active.pull-right{:href => '#'} Table View
+    %a.btn.btn-primary.active.pull-right{:href => new_cam_path} + New Cam
 
-= render @cams
-
-= link_to 'New Cam', new_cam_path
-
-
+.row
+  .col-md-12
+    = render @cams

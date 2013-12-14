@@ -1,0 +1,27 @@
+%nav.navbar.navbar-fixed-top.navbar-inverse
+  .container
+    .navbar-header
+      %button.navbar-toggle{"type" => "button", "data-toggle" => "collapse", "data-target" => "#grp1"}
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.navbar-brand{:href=>'#'} Dash
+
+    #grp1.collapse.navbar-collapse
+      %ul.nav.navbar-nav
+        %li.dropdown
+          %a.dropdown-toggle{:href=>'#','data-toggle'=>'dropdown'}Administration
+          %ul.dropdown-menu
+            %li
+              %a{:href => '#'} Administration
+            %li
+              %a{:href => cams_path} Traffic Snapshots
+
+      %ul.nav.navbar-nav.navbar-right
+        %li.dropdown
+          %a.dropdown-toggle{:href=>'#','data-toggle'=>'dropdown'}mtsai@creaxon.com
+          %ul.dropdown-menu
+            %li
+              %a{:href => '#'} Sign out
+            %li
+              %a{:href => '#'} Edit profile
