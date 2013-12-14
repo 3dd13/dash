@@ -1,5 +1,6 @@
 Sitemon::Application.routes.draw do
 
+  devise_for :users
   get 'cams/table' => 'cams#table'
   resources :cams
 
