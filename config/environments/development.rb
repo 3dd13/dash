@@ -29,5 +29,14 @@ Sitemon::Application.configure do
 
   # mt: devise
   config.action_mailer.default_url_options = { :host => 'localhost:3001' }
-
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address => 'smtp.gmail.com',
+    :port => 587,
+    :domain => 'creaxon.com',
+    :user_name => 'server@creaxon.com',
+    :password => 'servetheworld',
+    :authentication => 'plain',
+    :enable_starttls_auto => true
+  }
 end
