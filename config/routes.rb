@@ -2,6 +2,11 @@ Sitemon::Application.routes.draw do
 
   devise_for :admins
   devise_for :users
+
+  namespace :admin do
+    get 'members' => 'members#index'
+  end
+
   get 'cams/table' => 'cams#table'
   resources :cams
 

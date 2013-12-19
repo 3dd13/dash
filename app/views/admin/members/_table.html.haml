@@ -1,0 +1,21 @@
+%table.table.table-primary
+  %tr
+    %th email
+    %th sign_in_count
+    %th current_sign_in
+    %th last_sign_in
+    %th reset_password_sent_at
+    %th remember_created_at
+
+  - members.each do |u|
+    %tr
+      %td= u.email
+      %td= u.sign_in_count
+      %td
+        %p= u.current_sign_in_at
+        %p= u.current_sign_in_ip
+      %td
+        %p= u.last_sign_in_at
+        %p= u.last_sign_in_ip
+      %td= u.reset_password_sent_at
+      %td= u.remember_created_at

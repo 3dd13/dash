@@ -1,0 +1,12 @@
+.page-header
+  %h2
+    Admins
+
+= render partial: 'table', locals: { members: @admins }
+
+
+.page-header
+  %h2
+    Users
+
+= render partial: 'table', locals: { members: @users }
