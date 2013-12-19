@@ -1,10 +1,12 @@
 class DashboardsController < ApplicationController
+
+  before_action :authenticate_user!
   before_action :set_dashboard, only: [:show, :edit, :update, :destroy]
 
   # GET /dashboards
   # GET /dashboards.json
   def index
-    @dashboards = Dashboard.all
+    @dashboards = current_user.dashboards
   end
 
   # GET /dashboards/1
@@ -25,6 +27,7 @@ class DashboardsController < ApplicationController
   # POST /dashboards.json
   def create
     @dashboard = Dashboard.new(dashboard_params)
+    @dashboard.user_id = current_user.id
 
     respond_to do |format|
       if @dashboard.save

@@ -1,9 +1,8 @@
 %h1 Listing dashboards
 
-%table
+%table.table.table-primary
   %tr
     %th Name
-    %th User
     %th
     %th
     %th
@@ -11,7 +10,6 @@
   - @dashboards.each do |dashboard|
     %tr
       %td= dashboard.name
-      %td= dashboard.user_id
       %td= link_to 'Show', dashboard
       %td= link_to 'Edit', edit_dashboard_path(dashboard)
       %td= link_to 'Destroy', dashboard, :method => :delete, :data => { :confirm => 'Are you sure?' }
