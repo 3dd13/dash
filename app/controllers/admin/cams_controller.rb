@@ -1,4 +1,4 @@
-class CamsController < ApplicationController
+class Admin::CamsController < ApplicationController
 
   before_action :authenticate_admin!
   before_action :set_cam, only: [:show, :edit, :update, :destroy]

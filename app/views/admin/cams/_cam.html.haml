@@ -4,8 +4,8 @@
     = cam.location
   %ul.edit
     %li
-      = link_to edit_cam_path(cam) do
+      = link_to edit_admin_cam_path(cam) do
         %i.glyphicon.glyphicon-cog
     %li
-      = link_to cam_path(cam), :method => :delete, :data => { :confirm => 'Are you sure?' } do
+      = link_to admin_cam_path(cam), :method => :delete, :data => { :confirm => 'Are you sure?' } do
         %i.glyphicon.glyphicon-remove

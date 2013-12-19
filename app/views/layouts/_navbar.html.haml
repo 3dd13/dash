@@ -13,9 +13,9 @@
           %a.dropdown-toggle{:href=>'#','data-toggle'=>'dropdown'}Administration
           %ul.dropdown-menu
             %li
-              %a{:href => '#'} Administration
+              %a{ :href => admin_members_path } Members
             %li
-              %a{:href => cams_path} Traffic Snapshots
+              %a{ :href => admin_cams_path } Traffic Snapshots
 
       - if user_signed_in?
         %ul.nav.navbar-nav.navbar-right
