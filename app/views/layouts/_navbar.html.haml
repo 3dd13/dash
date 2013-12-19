@@ -8,14 +8,15 @@
       %a.navbar-brand{:href=>'#'} Dash
 
     #grp1.collapse.navbar-collapse
-      %ul.nav.navbar-nav
-        %li.dropdown
-          %a.dropdown-toggle{:href=>'#','data-toggle'=>'dropdown'}Administration
-          %ul.dropdown-menu
-            %li
-              %a{ :href => admin_members_path } Members
-            %li
-              %a{ :href => admin_cams_path } Traffic Snapshots
+      - if admin_signed_in?
+        %ul.nav.navbar-nav
+          %li.dropdown
+            %a.dropdown-toggle{:href=>'#','data-toggle'=>'dropdown'}Administration
+            %ul.dropdown-menu
+              %li
+                %a{ :href => admin_members_path } Members
+              %li
+                %a{ :href => admin_cams_path } Traffic Snapshots
 
       - if user_signed_in?
         %ul.nav.navbar-nav.navbar-right
