@@ -1,5 +1,7 @@
 Sitemon::Application.routes.draw do
 
+  resources :dashboards
+
   devise_for :admins
   devise_for :users
 
