@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131219192839) do
+ActiveRecord::Schema.define(version: 20131219194843) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -48,6 +48,16 @@ ActiveRecord::Schema.define(version: 20131219192839) do
   end
 
   add_index "dashboards", ["user_id"], name: "index_dashboards_on_user_id"
+
+  create_table "slots", force: true do |t|
+    t.integer  "dashboard_id"
+    t.integer  "cam_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "slots", ["cam_id"], name: "index_slots_on_cam_id"
+  add_index "slots", ["dashboard_id"], name: "index_slots_on_dashboard_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
