@@ -1,5 +1,6 @@
-user = User.new( email: "mtsai@creaxon.com", password: "bigsecret" )
-user.skip_confirmation!
-user.save
-
 Admin.create( email: "admin@creaxon.com", password: "bigsecret" )
+
+u = User.new( email: "user@creaxon.com", password: "bigsecret" )
+u.skip_confirmation!
+u.save
+
