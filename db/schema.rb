@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131219194843) do
+ActiveRecord::Schema.define(version: 20131221045204) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20131219194843) do
   add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
 
   create_table "cams", force: true do |t|
-    t.string   "location"
+    t.string   "address"
     t.decimal  "latitude"
     t.decimal  "longitude"
     t.string   "uri"
@@ -48,6 +48,17 @@ ActiveRecord::Schema.define(version: 20131219194843) do
   end
 
   add_index "dashboards", ["user_id"], name: "index_dashboards_on_user_id"
+
+  create_table "locations", force: true do |t|
+    t.string  "address"
+    t.string  "marker"
+    t.decimal "latitude",       precision: 15, scale: 10
+    t.decimal "longitude",      precision: 15, scale: 10
+    t.integer "locatable_id"
+    t.string  "locatable_type"
+  end
+
+  add_index "locations", ["locatable_id", "locatable_type"], name: "index_locations_on_locatable_id_and_locatable_type"
 
   create_table "slots", force: true do |t|
     t.integer  "dashboard_id"

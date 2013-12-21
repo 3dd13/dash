@@ -6,7 +6,7 @@ class Admin::CamsController < ApplicationController
   # GET /cams
   # GET /cams.json
   def index
-    @cams = Cam.all
+    @cams = Cam.includes(:location).all
   end
 
   def table
@@ -21,6 +21,7 @@ class Admin::CamsController < ApplicationController
   # GET /cams/new
   def new
     @cam = Cam.new
+    @cam.build_location
   end
 
   # GET /cams/1/edit
@@ -34,7 +35,7 @@ class Admin::CamsController < ApplicationController
 
     respond_to do |format|
       if @cam.save
-        format.html { redirect_to cams_url, notice: 'Cam was successfully created.' }
+        format.html { redirect_to admin_cams_url, notice: 'Cam was successfully created.' }
         format.json { render action: 'show', status: :created, location: @cam }
       else
         format.html { render action: 'new' }
@@ -48,7 +49,7 @@ class Admin::CamsController < ApplicationController
   def update
     respond_to do |format|
       if @cam.update(cam_params)
-        format.html { redirect_to cams_url, notice: 'Cam was successfully updated.' }
+        format.html { redirect_to admin_cams_url, notice: 'Cam was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -62,7 +63,7 @@ class Admin::CamsController < ApplicationController
   def destroy
     @cam.destroy
     respond_to do |format|
-      format.html { redirect_to cams_url }
+      format.html { redirect_to admin_cams_url }
       format.json { head :no_content }
     end
   end
@@ -75,6 +76,6 @@ class Admin::CamsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cam_params
-      params.require(:cam).permit(:location, :longitude, :latitude, :uri)
+      params.require(:cam).permit(:url, location_attributes: [ :address, :longitude, :latitude ])
     end
 end
