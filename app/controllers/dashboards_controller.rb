@@ -6,7 +6,7 @@ class DashboardsController < ApplicationController
   # GET /dashboards
   # GET /dashboards.json
   def index
-    @dashboards = current_user.dashboards
+    @dashboards = current_user.dashboards.includes([:point_a, :point_b])
   end
 
   # GET /dashboards/1
