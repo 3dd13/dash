@@ -6,8 +6,28 @@
         - @dashboard.errors.full_messages.each do |msg|
           %li= msg
 
-  .field
-    = f.label :name
-    = f.text_field :name
+  .form-group
+    = f.text_field :name, placeholder: "name", class: "form-control"
+
+  %h3 From:
+  = f.fields_for :point_a do |l|
+    = l.hidden_field :marker, value: 'A'
+    .form-group
+      = l.text_field :address, placeholder: "address", class: "form-control"
+    .form-group
+      = l.text_field :latitude, placeholder: "latitude", class: "form-control"
+    .form-group
+      = l.text_field :longitude, placeholder: "longitude", class: "form-control"
+
+  %h3 To:
+  = f.fields_for :point_b do |l|
+    = l.hidden_field :marker, value: 'B'
+    .form-group
+      = l.text_field :address, placeholder: "address", class: "form-control"
+    .form-group
+      = l.text_field :latitude, placeholder: "latitude", class: "form-control"
+    .form-group
+      = l.text_field :longitude, placeholder: "longitude", class: "form-control"
+
   .actions
-    = f.submit 'Save'
+    = f.submit 'Save', :class => "btn btn-block btn-success"

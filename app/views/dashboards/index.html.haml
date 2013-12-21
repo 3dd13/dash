@@ -1,20 +1,27 @@
-%h1 Listing dashboards
+.page-header
+  %h2
+    My Dashboards
+    %a.btn.btn-primary.active.pull-right{ :href => new_dashboard_path } + Dashboard
 
 %table.table.table-primary
   %tr
     %th Name
+    %th From
+    %th To
     %th Cams
     %th
     %th
     %th
 
-  - @dashboards.each do |dashboard|
+  - @dashboards.each do |d|
     %tr
-      %td= dashboard.name
-      %td= dashboard.cams.count
-      %td= link_to 'Show', dashboard
-      %td= link_to 'Edit', edit_dashboard_path(dashboard)
-      %td= link_to 'Destroy', dashboard, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      %td= d.name
+      %td= d.point_a.address
+      %td= d.point_b.address
+      %td= d.cams.count
+      %td= link_to 'Show', d
+      %td= link_to 'Edit', edit_dashboard_path(d)
+      %td= link_to 'Destroy', d, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
 

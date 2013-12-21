@@ -7,15 +7,15 @@
           %li= msg
 
   .form-group
-    = f.text_field :uri, :placeholder => "url", :class => "form-control"
+    = f.text_field :uri, placeholder: "url", class: "form-control"
 
   = f.fields_for :location do |l|
     .form-group
-      = l.text_field :address, :placeholder => "address", :class => "form-control"
+      = l.text_field :address, placeholder: "address", class: "form-control"
     .form-group
-      = l.text_field :latitude, :placeholder => "latitude", :class => "form-control"
+      = l.text_field :latitude, placeholder: "latitude", class: "form-control"
     .form-group
-      = l.text_field :longitude, :placeholder => "longitude", :class => "form-control"
+      = l.text_field :longitude, placeholder: "longitude", class: "form-control"
 
   .actions
-    = f.submit 'Save', :class => "btn btn-block btn-success"
+    = f.submit 'Save', class: "btn btn-block btn-success"
