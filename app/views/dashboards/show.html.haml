@@ -7,6 +7,9 @@
   %b User:
   = @dashboard.user_id
 
+- @cams.each do |c|
+  = render partial: 'admin/cams/cam', locals: {cam: c}
+
 = link_to 'Edit', edit_dashboard_path(@dashboard)
 \|
 = link_to 'Back', dashboards_path

@@ -3,6 +3,7 @@
 %table.table.table-primary
   %tr
     %th Name
+    %th Cams
     %th
     %th
     %th
@@ -10,6 +11,7 @@
   - @dashboards.each do |dashboard|
     %tr
       %td= dashboard.name
+      %td= dashboard.cams.count
       %td= link_to 'Show', dashboard
       %td= link_to 'Edit', edit_dashboard_path(dashboard)
       %td= link_to 'Destroy', dashboard, :method => :delete, :data => { :confirm => 'Are you sure?' }
