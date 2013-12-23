@@ -8,6 +8,7 @@ Sitemon::Application.routes.draw do
   namespace :admin do
     get 'members' => 'members#index'
     get 'cams/table' => 'cams#table'
+    get 'cams/map' => 'cams#map'
     resources :cams
   end
 

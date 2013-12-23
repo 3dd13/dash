@@ -13,6 +13,9 @@ class DashboardsController < ApplicationController
   # GET /dashboards/1.json
   def show
     @cams = @dashboard.cams
+    @locations = [ @dashboard.point_a, @dashboard.point_b ].map do |p|
+      { lat: p.latitude, lon: p.longitude }
+    end
   end
 
   # GET /dashboards/new

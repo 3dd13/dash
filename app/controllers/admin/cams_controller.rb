@@ -13,6 +13,14 @@ class Admin::CamsController < ApplicationController
     @cams = Cam.all
   end
 
+  def map
+    @cams = Cam.all
+    @cam_locations = @cams.map do |c|
+      { lat: c.latitude, lon: c.longitude, title: "#{c.name}:#{c.address}",
+        html: "#{render_to_string partial: '/admin/cams/cam', locals:{cam: c} }" }
+    end
+  end
+
   # GET /cams/1
   # GET /cams/1.json
   def show

@@ -1,0 +1,29 @@
+.page-header
+  %h2
+    Traffic Cameras
+    %a.btn.btn-primary.active.pull-right{ :href => admin_cams_table_path } Table
+    %a.btn.btn-primary.active.pull-right{ :href => admin_cams_path } Tumbnails
+    %a.btn.btn-primary.active.pull-right{ :href => new_admin_cam_path } + New Cam
+
+  %p#notice= notice
+
+.row
+  .col-md-8
+    #map
+  .col-md-4#sidebar
+    #map-control
+    -# @cams.each do |c|
+      =# render partial: 'admin/cams/cam', locals: {cam: c}
+
+:javascript
+  $(function(){
+    new Maplace({
+    	locations: #{@cam_locations.to_json},
+      commons: { zoom: 15 },
+      type: 'marker',
+    	map_div: '#map',
+      controls_div: '#map-control',
+      controls_type: 'list',
+      controls_on_map: false
+    }).Load();
+  })

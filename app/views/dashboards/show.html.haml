@@ -17,24 +17,9 @@
 
 :javascript
   $(function(){
-    var LocsD = [
-    	{
-    			lat: "#{@dashboard.point_a.latitude}",
-    			lon: "#{@dashboard.point_a.longitude}",
-    			title: 'Milan, Italy',
-    			html: '<h3>Milan, Italy</h3>'
-    	},
-    	{
-    			lat: "#{@dashboard.point_b.latitude}",
-    			lon: "#{@dashboard.point_b.longitude}",
-    			title: 'Zurich, Switzerland',
-    			html: '<h3>Zurich, Switzerland</h3>',
-    			visible: false
-    	}
-    ];
 
     new Maplace({
-    	locations: LocsD,
+    	locations: #{@locations.to_json},
     	map_div: '#map',
     	generate_controls: false,
     	show_markers: false,
@@ -42,16 +27,16 @@
     	draggable: true,
     	directions_panel: '#route',
       map_options: { scrollwheel: false },
+
     	afterRoute: function(distance, status, result) {
         var duration;
-
         if (typeof result !== "undefined" ) {
             duration = result.routes[0].legs[0].duration.value;
             console.log("d=" + distance +  " t=" + duration);
         		$('#km').text(': '+(distance/1000)+'km');
         		$('#min').text('/ '+(duration/60).toFixed(2)+'min');
         }
-
     	}
+
     }).Load();
   })
