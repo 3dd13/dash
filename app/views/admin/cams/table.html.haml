@@ -6,7 +6,8 @@
 
 %table.table
   %tr
-    %th Location
+    %th Name
+    %th Address
     %th Latitude
     %th Longitude
     %th Uri
@@ -16,7 +17,8 @@
 
   - @cams.each do |cam|
     %tr
-      %td= cam.location
+      %td= cam.name
+      %td= cam.address
       %td= cam.latitude
       %td= cam.longitude
       %td= cam.uri
