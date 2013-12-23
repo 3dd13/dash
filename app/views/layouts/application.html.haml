@@ -3,6 +3,7 @@
   %head
     %title Dash
     = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
+    = javascript_include_tag "http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.7"
     = javascript_include_tag "application", "data-turbolinks-track" => true
     = csrf_meta_tags
 
@@ -13,7 +14,7 @@
     - if alert
       %p.alert.alert.alert-warning= alert
 
-    .container
+    #content.container{class: "#{controller_name} #{action_name}"}
       = yield
 
     .container

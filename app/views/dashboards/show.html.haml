@@ -1,15 +1,57 @@
-%p#notice= notice
+.page-header
+  %h2
+    = @dashboard.name
+    %span#km.strong
+    %span#min.strong
+    %a.btn.btn-primary.active.pull-right{ :href => dashboards_path(@dashboard) } All Dashboards
+    %a.btn.btn-primary.active.pull-right{ :href => edit_dashboard_path(@dashboard) } Edit This
 
-%p
-  %b Name:
-  = @dashboard.name
-%p
-  %b User:
-  = @dashboard.user_id
+  %p#notice= notice
 
-- @cams.each do |c|
-  = render partial: 'admin/cams/cam', locals: {cam: c}
+.row
+  .col-md-9
+    #map
+  #sidebar.col-md-3
+    - @cams.each do |c|
+      = render partial: 'admin/cams/cam', locals: {cam: c}
 
-= link_to 'Edit', edit_dashboard_path(@dashboard)
-\|
-= link_to 'Back', dashboards_path
+:javascript
+  $(function(){
+    var LocsD = [
+    	{
+    			lat: "#{@dashboard.point_a.latitude}",
+    			lon: "#{@dashboard.point_a.longitude}",
+    			title: 'Milan, Italy',
+    			html: '<h3>Milan, Italy</h3>'
+    	},
+    	{
+    			lat: "#{@dashboard.point_b.latitude}",
+    			lon: "#{@dashboard.point_b.longitude}",
+    			title: 'Zurich, Switzerland',
+    			html: '<h3>Zurich, Switzerland</h3>',
+    			visible: false
+    	}
+    ];
+
+    new Maplace({
+    	locations: LocsD,
+    	map_div: '#map',
+    	generate_controls: false,
+    	show_markers: false,
+    	type: 'directions',
+    	draggable: true,
+    	directions_panel: '#route',
+      map_options: { scrollwheel: false },
+    	afterRoute: function(distance, status, result) {
+        var duration;
+
+        if (typeof result !== "undefined" ) {
+            duration = result.routes[0].legs[0].duration.value;
+            console.log("d=" + distance +  " t=" + duration);
+        		$('#km').text(': '+(distance/1000)+'km');
+        		$('#min').text('/ '+(duration/60).toFixed(2)+'min');
+        }
+
+    	}
+    }).Load();
+  })
