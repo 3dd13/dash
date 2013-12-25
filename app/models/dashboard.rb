@@ -6,6 +6,8 @@ class Dashboard < ActiveRecord::Base
   has_one :point_a, ->{ where marker: 'A' }, class_name: "Location", as: :locatable, dependent: :destroy
   has_one :point_b, ->{ where marker: 'B' }, class_name: "Location", as: :locatable, dependent: :destroy
 
+  validates :name, presence: true
+
   accepts_nested_attributes_for :point_a
   accepts_nested_attributes_for :point_b
 end
