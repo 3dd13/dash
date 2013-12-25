@@ -44,6 +44,9 @@ end
 # Use debugger
 gem 'debugger', group: [:development, :test]
 
+gem 'rspec-rails', group: [:development, :test]
+gem 'factory_girl_rails', group: [:development, :test]
+
 gem "haml-rails", "~> 0.5.1"
 
 # less-bootstrap-rails and dependencies
