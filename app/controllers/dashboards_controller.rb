@@ -13,8 +13,18 @@ class DashboardsController < ApplicationController
   # GET /dashboards/1.json
   def show
     @cams = @dashboard.cams
-    @locations = [ @dashboard.point_a, @dashboard.point_b ].map do |p|
-      { lat: p.latitude, lon: p.longitude }
+    @origin = @dashboard.point_a
+    @destination = @dashboard.point_b
+
+    @markers = Cam.all.map do |c|
+      {
+        lat: c.latitude,
+        lng: c.longitude,
+        details: c.name,
+        infoWindow: {
+          content: render_to_string(partial: 'admin/cams/cam', locals: { cam: c })
+        }
+      }
     end
   end
 

@@ -10,6 +10,7 @@
 
 .row
   .col-md-9
+    #view_all View All
     #map
   #sidebar.col-md-3
     - @cams.each do |c|
@@ -17,26 +18,72 @@
 
 :javascript
   $(function(){
+    var map = new GMaps({ div: '#map' }),
+        bounds = new google.maps.LatLngBounds(),
 
-    new Maplace({
-    	locations: #{@locations.to_json},
-    	map_div: '#map',
-    	generate_controls: false,
-    	show_markers: false,
-    	type: 'directions',
-    	draggable: true,
-    	directions_panel: '#route',
-      map_options: { scrollwheel: false },
+        zoom_in = function(marker){
+          map.setZoom(15);
+          map.panTo(marker.getPosition())
+        },
 
-    	afterRoute: function(distance, status, result) {
-        var duration;
-        if (typeof result !== "undefined" ) {
-            duration = result.routes[0].legs[0].duration.value;
-            console.log("d=" + distance +  " t=" + duration);
-        		$('#km').text(': '+(distance/1000)+'km');
-        		$('#min').text('/ '+(duration/60).toFixed(2)+'min');
-        }
-    	}
+        view_all = function(){
+          map.fitBounds(bounds);
+        },
 
-    }).Load();
-  })
+        show_distance_and_duration = function(result) {
+          var distance = result.legs[0].distance.value,
+              duration = result.legs[0].duration.value;
+          $('#km').text(': '+(distance/1000).toFixed(2)+'km');
+          $('#min').text('/ '+(duration/60).toFixed(2)+'min');
+        },
+
+        add_markers = function(result, tol){
+          var poly = new google.maps.Polyline({ path: result.overview_path }),
+              markers = [];
+
+          if (typeof tol === 'undefined') { tol = 1e-3 }
+          $.each(#{@markers.to_json}, function(i,m){
+            var point = new google.maps.LatLng(m.lat, m.lng);
+
+            m.click = zoom_in;
+            m.icon  = google.maps.geometry.poly.isLocationOnEdge(point, poly, tol) ?
+                      "#{asset_path 'red_dot12x12.png'}" : "#{asset_path 'white_dot12x12.png'}";
+            markers.push(m);
+          })
+
+          markers.push({
+            icon: "#{asset_path 'pin_a.png'}",
+            lat: #{@origin.latitude},
+            lng: #{@origin.longitude},
+            click: zoom_in
+          });
+
+          markers.push({
+            icon: "#{asset_path 'pin_b.png'}",
+            lat: #{@destination.latitude},
+            lng: #{@destination.longitude},
+            click: zoom_in
+          });
+
+          map.addMarkers(markers);
+        };
+
+    view_all();
+    $('#view_all').click(view_all);
+    bounds.extend(new google.maps.LatLng(#{@origin.latitude}, #{@origin.longitude}));
+    bounds.extend(new google.maps.LatLng(#{@destination.latitude}, #{@destination.longitude}));
+
+    map.drawRoute({
+      origin: [ #{@origin.latitude}, #{@origin.longitude} ],
+      destination: [ #{@destination.latitude}, #{@destination.longitude} ],
+      travelMode: 'driving',
+      strokeColor: '#FF00FF',
+      strokeOpacity: 0.3,
+      strokeWeight: 16,
+      callback: function(result){
+        show_distance_and_duration(result);
+        add_markers(result);
+      } // callback
+
+    }); // drawRoute
+   })
