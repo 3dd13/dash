@@ -80,7 +80,6 @@
           map.addMarkers(markers);
         };
 
-    view_all();
     $('#view_all').click(view_all);
     google.maps.event.addListener(map.map, 'click', view_all);
     bounds.extend(new google.maps.LatLng(#{@origin.latitude}, #{@origin.longitude}));
@@ -99,4 +98,5 @@
         add_markers(result);
       } // callback
     }); // drawRoute
+    view_all();
    })
