@@ -53,3 +53,5 @@ gem 'less-rails-bootstrap'
 
 gem 'devise'
 gem 'html2haml', :group => :development
+
+gem 'geocoder'
