@@ -1,5 +1,6 @@
 Sitemon::Application.routes.draw do
 
+  get 'dashboards/cams' => 'dashboards#cams'
   resources :dashboards
 
   devise_for :admins

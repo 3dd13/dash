@@ -18,11 +18,12 @@ class DashboardsController < ApplicationController
 
     @markers = Cam.all.map do |c|
       {
+        id: c.id,
         lat: c.latitude,
         lng: c.longitude,
         details: c.name,
         infoWindow: {
-          content: render_to_string(partial: 'admin/cams/cam', locals: { cam: c })
+          content: render_to_string(partial: 'cam', locals: { cam: c })
         }
       }
     end
@@ -77,6 +78,16 @@ class DashboardsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to dashboards_url }
       format.json { head :no_content }
+    end
+  end
+
+  def cams
+    ids = params[:ids].split(/[^\d]/)
+    cams = Cam.includes(:location).find(ids).map do |c|
+      c.as_json.merge html: "#{render_to_string partial: 'cam', locals: { cam: c }, formats: [:html]}"
+    end
+    respond_to do |format|
+      format.json { render json: cams}
     end
   end
 

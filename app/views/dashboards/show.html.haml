@@ -13,12 +13,10 @@
     #view_all View All
     #map
   #sidebar.col-md-3
-    - @cams.each do |c|
-      = render partial: 'admin/cams/cam', locals: {cam: c}
 
 :javascript
   $(function(){
-    var map = new GMaps({ div: '#map' }),
+    var map = new GMaps({ div: '#map', scrollwheel: false }),
         bounds = new google.maps.LatLngBounds(),
 
         zoom_in = function(marker){
@@ -37,19 +35,33 @@
           $('#min').text('/ '+(duration/60).toFixed(2)+'min');
         },
 
+        onpath_callback = function(ids) {
+          $.get('/dashboards/cams?ids=' + ids.join(','), function(data){
+            $.each(data, function(i, d){
+              $('#sidebar').append(d.html);
+            })
+          })
+        },
+
         add_markers = function(result, tol){
           var poly = new google.maps.Polyline({ path: result.overview_path }),
-              markers = [];
+              markers = [],
+              onpath_ids = [];
 
           if (typeof tol === 'undefined') { tol = 1e-3 }
           $.each(#{@markers.to_json}, function(i,m){
             var point = new google.maps.LatLng(m.lat, m.lng);
 
             m.click = zoom_in;
-            m.icon  = google.maps.geometry.poly.isLocationOnEdge(point, poly, tol) ?
-                      "#{asset_path 'red_dot12x12.png'}" : "#{asset_path 'white_dot12x12.png'}";
+            if (google.maps.geometry.poly.isLocationOnEdge(point, poly, tol)) {
+              m.icon = "#{asset_path 'red_dot12x12.png'}";
+              onpath_ids.push(m.id);
+            } else {
+              m.icon = "#{asset_path 'white_dot12x12.png'}";
+            }
             markers.push(m);
           })
+          onpath_callback(onpath_ids);
 
           markers.push({
             icon: "#{asset_path 'pin_a.png'}",
@@ -70,8 +82,10 @@
 
     view_all();
     $('#view_all').click(view_all);
+    google.maps.event.addListener(map.map, 'click', view_all);
     bounds.extend(new google.maps.LatLng(#{@origin.latitude}, #{@origin.longitude}));
     bounds.extend(new google.maps.LatLng(#{@destination.latitude}, #{@destination.longitude}));
+    map.addLayer('traffic');
 
     map.drawRoute({
       origin: [ #{@origin.latitude}, #{@origin.longitude} ],
@@ -84,6 +98,5 @@
         show_distance_and_duration(result);
         add_markers(result);
       } // callback
-
     }); // drawRoute
    })
