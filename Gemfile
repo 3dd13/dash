@@ -64,6 +64,7 @@ group :development, :test do
   gem 'debugger'
   gem 'rspec-rails'
   gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
+  gem 'growl'
 end
 
 group :test do
