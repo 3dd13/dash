@@ -18,6 +18,10 @@ class Location < ActiveRecord::Base
     :less_than_or_equal_to => +180.0
   }
 
+  def to_latlng
+    { lat: latitude, lng: longitude }.to_json
+  end
+
   private
   def needs_geocoding?
     address && !(latitude && longitude)

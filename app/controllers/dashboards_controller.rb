@@ -13,20 +13,17 @@ class DashboardsController < ApplicationController
   # GET /dashboards/1.json
   def show
     @cams = @dashboard.cams
-    @origin = @dashboard.point_a
-    @destination = @dashboard.point_b
-
+    @origin = @dashboard.point_a.to_latlng
+    @destination = @dashboard.point_b.to_latlng
     @markers = Cam.all.map do |c|
       {
         id: c.id,
         lat: c.latitude,
         lng: c.longitude,
         details: c.name,
-        infoWindow: {
-          content: render_to_string(partial: 'cam', locals: { cam: c })
-        }
+        infoWindow: { content: render_to_string(partial: 'cam', locals: { cam: c }) }
       }
-    end
+    end.to_json
   end
 
   # GET /dashboards/new
@@ -83,7 +80,8 @@ class DashboardsController < ApplicationController
 
   def cams
     ids = params[:ids].split(/[^\d]/)
-    cams = Cam.includes(:location).find(ids).map do |c|
+    cams = Cam.includes(:location).find(ids)
+    cams = cams.map do |c|
       c.as_json.merge html: "#{render_to_string partial: 'cam', locals: { cam: c }, formats: [:html]}"
     end
     respond_to do |format|

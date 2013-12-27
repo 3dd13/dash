@@ -19,7 +19,7 @@
       %td= d.point_a.address
       %td= d.point_b.address
       %td= d.cams.count
-      %td= link_to 'Show', d
+      %td= link_to 'Show', dashboard_path(d)
       %td= link_to 'Edit', edit_dashboard_path(d)
       %td= link_to 'Destroy', d, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
