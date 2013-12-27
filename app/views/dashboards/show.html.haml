@@ -3,100 +3,27 @@
     = @dashboard.name
     %span#km.strong
     %span#min.strong
-    %a.btn.btn-primary.active.pull-right{ :href => dashboards_path(@dashboard) } All Dashboards
+    %a.btn.btn-primary.active.pull-right{ :href => dashboards_path } All Dashboards
     %a.btn.btn-primary.active.pull-right{ :href => edit_dashboard_path(@dashboard) } Edit This
 
   %p#notice= notice
 
 .row
   .col-md-9
-    #view_all View All
     #map
-  #sidebar.col-md-3
+  .col-md-3#sidebar
 
 :javascript
-  $(function(){
-    var map = new GMaps({ div: '#map', scrollwheel: false }),
-        bounds = new google.maps.LatLngBounds(),
 
-        zoom_in = function(marker){
-          map.setZoom(15);
-          map.panTo(marker.getPosition())
-        },
-
-        view_all = function(){
-          map.fitBounds(bounds);
-        },
-
-        show_distance_and_duration = function(result) {
-          var distance = result.legs[0].distance.value,
-              duration = result.legs[0].duration.value;
-          $('#km').text(': '+(distance/1000).toFixed(2)+'km');
-          $('#min').text('/ '+(duration/60).toFixed(2)+'min');
-        },
-
-        onpath_callback = function(ids) {
-          $.get('/dashboards/cams?ids=' + ids.join(','), function(data){
-            $.each(data, function(i, d){
-              $('#sidebar').append(d.html);
-            })
-          })
-        },
-
-        add_markers = function(result, tol){
-          var poly = new google.maps.Polyline({ path: result.overview_path }),
-              markers = [],
-              onpath_ids = [];
-
-          if (typeof tol === 'undefined') { tol = 1e-3 }
-          $.each(#{@markers.to_json}, function(i,m){
-            var point = new google.maps.LatLng(m.lat, m.lng);
-
-            m.click = zoom_in;
-            if (google.maps.geometry.poly.isLocationOnEdge(point, poly, tol)) {
-              m.icon = "#{asset_path 'red_dot12x12.png'}";
-              onpath_ids.push(m.id);
-            } else {
-              m.icon = "#{asset_path 'white_dot12x12.png'}";
-            }
-            markers.push(m);
-          })
-          onpath_callback(onpath_ids);
-
-          markers.push({
-            icon: "#{asset_path 'pin_a.png'}",
-            lat: #{@origin.latitude},
-            lng: #{@origin.longitude},
-            click: zoom_in
-          });
-
-          markers.push({
-            icon: "#{asset_path 'pin_b.png'}",
-            lat: #{@destination.latitude},
-            lng: #{@destination.longitude},
-            click: zoom_in
-          });
-
-          map.addMarkers(markers);
-        };
-
-    $('#view_all').click(view_all);
-    google.maps.event.addListener(map.map, 'click', view_all);
-    bounds.extend(new google.maps.LatLng(#{@origin.latitude}, #{@origin.longitude}));
-    bounds.extend(new google.maps.LatLng(#{@destination.latitude}, #{@destination.longitude}));
-    map.addLayer('traffic');
-
-    map.drawRoute({
-      origin: [ #{@origin.latitude}, #{@origin.longitude} ],
-      destination: [ #{@destination.latitude}, #{@destination.longitude} ],
-      travelMode: 'driving',
-      strokeColor: '#FF00FF',
-      strokeOpacity: 0.3,
-      strokeWeight: 16,
-      callback: function(result){
-        show_distance_and_duration(result);
-        add_markers(result);
-      } // callback
-    }); // drawRoute
-    view_all();
-   })
+  Dash.dashboard('#map', {
+    origin: #{@origin},
+    destination: #{@destination},
+    markers: $.parseJSON("#{escape_javascript @markers}"),
+    callback: function(distance, duration, onpath_marker_ids) {
+      $('#km').text(': '+(distance/1000).toFixed(2)+'km');
+      $('#min').text('/ '+(duration/60).toFixed(2)+'min');
+      $.get('/dashboards/cams?ids=' + onpath_marker_ids.join(','), function(data){
+        $.each(data, function(i, d){ $('#sidebar').append(d.html);})
+      })
+    }
+  })
