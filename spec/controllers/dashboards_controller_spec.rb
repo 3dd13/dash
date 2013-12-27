@@ -68,4 +68,19 @@ describe DashboardsController do
     it_should_behave_like "user_login_required"
   end
 
+
+  context "GET #cams" do
+    login_as_user
+    cams = FactoryGirl.create_list(:cam, 5)
+    ids = cams.map(&:id).join(',')
+
+    it "should return cams with ids" do
+      get :cams, ids: ids, format: :json
+
+
+      # response.cams.count.should be 5
+    end
+  end
+
+
 end
