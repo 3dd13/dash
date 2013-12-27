@@ -22,8 +22,7 @@
     callback: function(distance, duration, onpath_marker_ids) {
       $('#km').text(': '+(distance/1000).toFixed(2)+'km');
       $('#min').text('/ '+(duration/60).toFixed(2)+'min');
-      $.get('/dashboards/cams?ids=' + onpath_marker_ids.join(','), function(data){
-        $.each(data, function(i, d){ $('#sidebar').append(d.html);})
-      })
+      $.post('/dashboards/#{@dashboard.id}/cams?ids=' + onpath_marker_ids.join(','),
+        function(data){ $.each(data, function(i, d){ $('#sidebar').append(d.html);} ) });
     }
   })

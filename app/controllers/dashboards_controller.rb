@@ -1,7 +1,7 @@
 class DashboardsController < ApplicationController
 
   before_action :authenticate_user!
-  before_action :set_dashboard, only: [:show, :edit, :update, :destroy]
+  before_action :set_dashboard, only: [:show, :edit, :update, :destroy, :cams]
 
   # GET /dashboards
   # GET /dashboards.json
@@ -81,6 +81,7 @@ class DashboardsController < ApplicationController
   def cams
     ids = params[:ids].split(/[^\d]/)
     cams = Cam.includes(:location).find(ids)
+    (@dashboard.cams != cams) and @dashboard.cams = cams
     cams = cams.map do |c|
       c.as_json.merge html: "#{render_to_string partial: 'cam', locals: { cam: c }, formats: [:html]}"
     end

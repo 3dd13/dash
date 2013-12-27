@@ -63,22 +63,22 @@ describe DashboardsController do
     it_should_behave_like "user_login_required"
   end
 
-  context "GET #cams" do
-    before(:each) { get :cams }
+  context "POST #cams" do
+    before(:each) { post :cams, id: 1, ids: "1,2" }
     it_should_behave_like "user_login_required"
   end
 
 
-  context "GET #cams" do
+  context "POST #cams" do
     login_as_user
+
     cams = FactoryGirl.create_list(:cam, 5)
+    dashboard = FactoryGirl.create(:dashboard)
     ids = cams.map(&:id).join(',')
 
     it "should return cams with ids" do
-      get :cams, ids: ids, format: :json
-
-
-      # response.cams.count.should be 5
+      post :cams, id: dashboard.id, ids: ids, format: :json
+      dashboard.cams.count.should be 5
     end
   end
 
