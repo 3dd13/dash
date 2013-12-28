@@ -16,14 +16,55 @@
 = include_gon
 :javascript
 
-  Dash.dashboard('#map', {
-    origin: gon.origin,
-    destination: gon.destination,
-    markers: gon.markers,
-    callback: function(distance, duration, onpath_marker_ids) {
-      $('#km').text(': '+(distance/1000).toFixed(2)+'km');
-      $('#min').text('/ '+(duration/60).toFixed(2)+'min');
-      $.post('/dashboards/#{@dashboard.id}/cams?ids=' + onpath_marker_ids.join(','),
-        function(data){ $.each(data, function(i, d){ $('#sidebar').append(d.html);} ) });
-    }
-  })
+  $(function(){
+    $("#map").gmap3({
+      getroute: {
+        options: {
+          origin: gon.origin,
+          destination: gon.destination,
+          travelMode: google.maps.DirectionsTravelMode.DRIVING
+        },
+        callback: function(results){
+          var distance, duration;
+
+          if (!results) return;
+          distance = results.routes[0].legs[0].distance.value;
+          duration = results.routes[0].legs[0].duration.value;
+          $('#km').text(': '+(distance/1000).toFixed(2)+'km');
+          $('#min').text('/ '+(duration/60).toFixed(2)+'min');
+
+          $(this).gmap3({
+            marker: {
+              values: gon.markers,
+              options: { draggable: false },
+              events: {
+                click: function( marker, event, context ){
+                  var $this = $(this),
+                      map = $this.gmap3("get"),
+                      infowindow = $this.gmap3({get:{name:"infowindow"}});
+
+                  if (! infowindow ) {
+                    $this.gmap3({
+                      infowindow:{
+                        anchor: marker,
+                        option: { content: context.data }
+                      }
+                    });
+                    infowindow = $this.gmap3({get:{name:"infowindow"}});
+                  }
+
+                  map.setZoom(15);
+                  map.panTo(marker.position);
+                  infowindow.open(map, marker);
+                  infowindow.setContent(context.data);
+
+                }
+              }
+            },
+            directionsrenderer: { options:{ directions:results } },
+            trafficlayer: {}
+          });
+        }
+      }
+    });
+  });
