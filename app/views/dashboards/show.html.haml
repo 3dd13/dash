@@ -13,12 +13,13 @@
     #map
   .col-md-3#sidebar
 
+= include_gon
 :javascript
 
   Dash.dashboard('#map', {
-    origin: #{@origin},
-    destination: #{@destination},
-    markers: $.parseJSON("#{escape_javascript @markers}"),
+    origin: gon.origin,
+    destination: gon.destination,
+    markers: gon.markers,
     callback: function(distance, duration, onpath_marker_ids) {
       $('#km').text(': '+(distance/1000).toFixed(2)+'km');
       $('#min').text('/ '+(duration/60).toFixed(2)+'min');
