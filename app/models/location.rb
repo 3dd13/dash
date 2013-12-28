@@ -19,7 +19,7 @@ class Location < ActiveRecord::Base
   }
 
   def to_latlng
-    { lat: latitude, lng: longitude }.to_json
+    { lat: latitude, lng: longitude }
   end
 
   private

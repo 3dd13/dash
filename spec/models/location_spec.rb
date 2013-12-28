@@ -17,11 +17,11 @@ describe Location do
   end
 
   context '#to_latlng' do
-    it "should return json with keys (lat,lng)" do
+    it "should have keys (lat,lng) and allow mergin addition options" do
       loc = FactoryGirl.create(:location, latitude: 22.2, longitude: 114.2)
-      j = JSON.parse(loc.to_latlng)
-      j["lat"].should eq "22.2"
-      j["lng"].should eq "114.2"
+      latlng = loc.to_latlng
+      latlng[:lat].should eq 22.2
+      latlng[:lng].should eq 114.2
     end
   end
 
