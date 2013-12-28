@@ -12,9 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.widget.min
 //= require turbolinks
 //= require_tree .
 //= require twitter/bootstrap
 //= require maplace.min
 //= require gmaps
 //= require gmap3
+
