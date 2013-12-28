@@ -17,6 +17,16 @@
 :javascript
 
   $(function(){
+
+    var options = {
+      icon: {
+        pin_a: '/assets/pin_a.png',
+        pin_b: '/assets/pin_b.png',
+        marker_onpath: '/assets/red_dot12x12.png',
+        marker_offpath: '/assets/white_dot12x12.png'
+      }
+    };
+
     $("#map").gmap3({
       getroute: {
         options: {
@@ -36,7 +46,10 @@
           $(this).gmap3({
             marker: {
               values: gon.markers,
-              options: { draggable: false },
+              options: {
+                draggable: false,
+                icon: options.icon.marker_offpath
+              },
               events: {
                 click: function( marker, event, context ){
                   var $this = $(this),
@@ -61,7 +74,17 @@
                 }
               }
             },
-            directionsrenderer: { options:{ directions:results } },
+            directionsrenderer: {
+              options:{
+                directions:results,
+                draggable: true,
+                polylineOptions: {
+                  strokeColor: '#FF00FF',
+                  strokeOpacity: 0.3,
+                  strokeWeight: 16
+                }
+              }
+            },
             trafficlayer: {}
           });
         }
