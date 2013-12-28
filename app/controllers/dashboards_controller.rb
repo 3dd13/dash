@@ -1,7 +1,7 @@
 class DashboardsController < ApplicationController
 
   before_action :authenticate_user!
-  before_action :set_dashboard, only: [:show, :edit, :update, :destroy, :cams]
+  before_action :set_dashboard, only: [:show, :edit, :update, :destroy, :cams, :test]
 
   # GET /dashboards
   # GET /dashboards.json
@@ -12,6 +12,21 @@ class DashboardsController < ApplicationController
   # GET /dashboards/1
   # GET /dashboards/1.json
   def show
+    @cams = @dashboard.cams
+
+    gon.origin = @dashboard.point_a.to_latlng
+    gon.destination = @dashboard.point_b.to_latlng
+    gon.markers = Cam.all.map do |c|
+      { id: c.id,
+        details: c.name,
+        infoWindow: { content: render_to_string(partial: 'cam', locals: { cam: c }) }
+      }.merge(c.location.to_latlng)
+    end
+  end
+
+  # GET /dashboards/1/test
+  # GET /dashboards/1/test.json
+  def test
     @cams = @dashboard.cams
 
     gon.origin = @dashboard.point_a.to_latlng

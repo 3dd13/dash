@@ -1,0 +1,29 @@
+.page-header
+  %h2
+    = @dashboard.name
+    %span#km.strong
+    %span#min.strong
+    %a.btn.btn-primary.active.pull-right{ :href => dashboards_path } All Dashboards
+    %a.btn.btn-primary.active.pull-right{ :href => edit_dashboard_path(@dashboard) } Edit This
+
+  %p#notice= notice
+
+.row
+  .col-md-9
+    #map
+  .col-md-3#sidebar
+
+= include_gon
+:javascript
+
+  Dash.dashboard('#map', {
+    origin: gon.origin,
+    destination: gon.destination,
+    markers: gon.markers,
+    callback: function(distance, duration, onpath_marker_ids) {
+      $('#km').text(': '+(distance/1000).toFixed(2)+'km');
+      $('#min').text('/ '+(duration/60).toFixed(2)+'min');
+      $.post('/dashboards/#{@dashboard.id}/cams?ids=' + onpath_marker_ids.join(','),
+        function(data){ $.each(data, function(i, d){ $('#sidebar').append(d.html);} ) });
+    }
+  })
