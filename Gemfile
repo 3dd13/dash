@@ -65,9 +65,12 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
   gem 'growl'
+  gem 'guard-rspec'
+  gem 'guard-livereload'
 end
 
 group :test do
   gem 'factory_girl_rails'
-  gem 'guard-rspec'
 end
+
+gem "gon"
