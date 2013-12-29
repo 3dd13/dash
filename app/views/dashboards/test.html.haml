@@ -19,71 +19,85 @@
   $(function(){
 
     var options = {
+      origin: new google.maps.LatLng(gon.origin.lat, gon.origin.lng),
+      destination: new google.maps.LatLng(gon.destination.lat, gon.destination.lng),
+      markers: gon.markers,
+
       icon: {
         pin_a: '/assets/pin_a.png',
         pin_b: '/assets/pin_b.png',
         marker_onpath: '/assets/red_dot12x12.png',
         marker_offpath: '/assets/white_dot12x12.png'
+      },
+
+      directionRendererOptions: {
+        draggable: true,
+        polylineOptions: {
+          strokeColor: '#FF00FF',
+          strokeOpacity: 0.3,
+          strokeWeight: 16
+        }
       }
+    },
+
+    zoom_all = function() {
+      var map = $(this).gmap3("get"),
+          bounds=new google.maps.LatLngBounds();
+      bounds.extend(options.origin);
+      bounds.extend(options.destination);
+      map.fitBounds(bounds);
+    },
+
+    zoom_to_marker = function(marker, event, context){
+      var $this = $(this),
+          map = $this.gmap3("get"),
+          infowindow = $this.gmap3({get:{name:"infowindow"}});
+
+      if (! infowindow ) {
+        $this.gmap3({
+          infowindow: {
+            anchor: marker,
+            option: { content: context.data }
+          }
+        });
+        infowindow = $this.gmap3({get:{name:"infowindow"}});
+      }
+      infowindow.open(map, marker);
+      infowindow.setContent(context.data);
+      map.setZoom(15);
+      map.panTo(marker.position);
     };
 
     $("#map").gmap3({
+      map: { events: { click: zoom_all } },
       getroute: {
         options: {
-          origin: gon.origin,
-          destination: gon.destination,
+          origin: options.origin,
+          destination: options.destination,
           travelMode: google.maps.DirectionsTravelMode.DRIVING
         },
-        callback: function(results){
+
+        callback: function(result){
           var distance, duration;
 
-          if (!results) return;
-          distance = results.routes[0].legs[0].distance.value;
-          duration = results.routes[0].legs[0].duration.value;
+          if (!result) return;
+          distance = result.routes[0].legs[0].distance.value;
+          duration = result.routes[0].legs[0].duration.value;
           $('#km').text(': '+(distance/1000).toFixed(2)+'km');
           $('#min').text('/ '+(duration/60).toFixed(2)+'min');
 
           $(this).gmap3({
             marker: {
-              values: gon.markers,
+              values: options.markers,
               options: {
                 draggable: false,
                 icon: options.icon.marker_offpath
               },
-              events: {
-                click: function( marker, event, context ){
-                  var $this = $(this),
-                      map = $this.gmap3("get"),
-                      infowindow = $this.gmap3({get:{name:"infowindow"}});
-
-                  if (! infowindow ) {
-                    $this.gmap3({
-                      infowindow:{
-                        anchor: marker,
-                        option: { content: context.data }
-                      }
-                    });
-                    infowindow = $this.gmap3({get:{name:"infowindow"}});
-                  }
-
-                  map.setZoom(15);
-                  map.panTo(marker.position);
-                  infowindow.open(map, marker);
-                  infowindow.setContent(context.data);
-
-                }
-              }
+              events: { click: zoom_to_marker }
             },
             directionsrenderer: {
-              options:{
-                directions:results,
-                draggable: true,
-                polylineOptions: {
-                  strokeColor: '#FF00FF',
-                  strokeOpacity: 0.3,
-                  strokeWeight: 16
-                }
-              }
+              options: $.extend(options.directionRendererOptions,
+                { directions: result })
             },
             trafficlayer: {}
           });
