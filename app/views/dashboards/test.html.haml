@@ -48,22 +48,28 @@
       if (typeof tol === 'undefined') { tol = 1e-3 }
       $.each(markers, function(i,m){
         var point = new google.maps.LatLng(m.lat, m.lng),
-            onEdge = google.maps.geometry.poly.isLocationOnEdge;
+            onEdge = google.maps.geometry.poly.isLocationOnEdge,
+            origin = new google.maps.LatLng(path[0].lat(), path[0].lng());
+
         if (onEdge(point, poly, tol)) {
-          $.extend(m, {options: { icon: that.options.icon.marker_onpath }});
+          $.extend(m, {
+            options: { icon: that.options.icon.marker_onpath },
+            distance: google.maps.geometry.spherical.computeDistanceBetween(origin, point)
+          });
           result.onpath.push(m);
         } else {
           $.extend(m, {options: { icon: that.options.icon.marker_offpath }});
           result.offpath.push(m)
         }
       });
-
+      result.onpath.sort(function(a,b){return (a.distance - b.distance); });
       return result;
     },
 
     _redraw_markers: function(markers, path) {
       var orig = path[0],
-          dest = path[path.length-1];
+          dest = path[path.length-1],
+          sorted_markers;
 
       sorted_markers = this._sort_markers(markers, path);
 
