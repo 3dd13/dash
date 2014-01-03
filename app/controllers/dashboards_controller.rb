@@ -32,7 +32,7 @@ class DashboardsController < ApplicationController
     gon.origin = @dashboard.point_a.to_latlng
     gon.destination = @dashboard.point_b.to_latlng
     gon.markers = Cam.all.map do |c|
-      c.location.to_latlng.merge( { data: "#{render_to_string partial: 'cam', locals:{cam: c} }" } )
+      c.location.to_latlng.merge( { name: c.name, data: "#{render_to_string partial: 'cam', locals:{cam: c} }" } )
     end
   end
 

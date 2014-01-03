@@ -73,6 +73,9 @@
       this._trigger("on_markers_update", null, sorted_markers);
 
       this.element.gmap3({
+        clear: {
+          name: 'marker'
+        },
         marker: {
           values: markers,
           options: { draggable: false },
@@ -83,6 +86,8 @@
 
     _create: function() {
       var that = this;
+
+      google.maps.visualRefresh = true;
 
       this.element.gmap3({
         map: { events: { click: $.proxy(this._zoom_all, this) } },
