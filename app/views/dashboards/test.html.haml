@@ -1,18 +1,19 @@
 .page-header
   %h2
     = @dashboard.name
-    %span#km.strong
-    %span#min.strong
-    %p#cams.small
+    %span#km
+    %span#min
+
     %a.btn.btn-primary.active.pull-right{ :href => dashboards_path } All Dashboards
     %a.btn.btn-primary.active.pull-right{ :href => edit_dashboard_path(@dashboard) } Edit This
+  %p#cams
 
   %p#notice= notice
 
-.row
-  .col-md-3#sidebar
-  .col-md-9
-    #map
+.container
+  .row
+    .col-md-9.col-sm-7.col-xs-12#map
+    .col-md-3.col-sm-5.col-xs-12#sidebar
 
 = include_gon
 :javascript

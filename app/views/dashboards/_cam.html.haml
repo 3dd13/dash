@@ -1,4 +1,3 @@
-.cam{id: cam.id}
-  = image_tag cam.uri
+.cam{id: cam.id, style: "background-image: url('#{cam.uri}');"}
   .location
     = "#{cam.name}: #{cam.address}"
