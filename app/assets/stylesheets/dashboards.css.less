@@ -1,24 +1,41 @@
+@app-header-height: 140px;
+@app-sidebar-width: 320px;
+
 #content.dashboards {
   .page-header {
+    height: @app-header-height;
     input.form-control {
       width: 500px;
     }
   }
-  #map {
-    height: 780px;
-  }
-  #sidebar {
-    height: 780px;
-    overflow: auto;
-    padding-left: 0;
-    padding-right: 0;
+  #app-body {
+    position: absolute;
+    top: @app-header-height;
+    left: 15px;
+    right: 15px;
+    bottom: 0;
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: @app-sidebar-width;
+      left: 0;
+    }
+    #sidebar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: @app-sidebar-width;
+      overflow: auto;
 
-    .cam {
-      width: 100%;
-      height: auto;
-      padding-top: 75%;
-      background-size: cover;
-      background-repeat: no-repeat;
+      .cam {
+        width: 100%;
+        height: auto;
+        padding-top: 75%;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
     }
   }
 }

@@ -6,7 +6,7 @@
     = @dashboard.name
     %span#km
     %span#min
-    #cams.small
+    %span#cams.small
 
 
   = form_for @dashboard,  html: {class: 'form-inline', role: 'form'} do |f|
@@ -19,10 +19,9 @@
 
   %p#notice= notice
 
-.container
-  .row
-    .col-md-9.col-sm-7.col-xs-12#map
-    .col-md-3.col-sm-5.col-xs-12#sidebar
+#app-body
+  #map
+  #sidebar
 
 = include_gon
 :javascript

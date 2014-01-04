@@ -14,5 +14,17 @@
  *= require_self
  */
 
-body { padding-top: 38px; }
+@navbar-height: 38px;
+@footer-height: 30px;
+
+#content {
+  position: absolute;
+  top: @navbar-height;
+  bottom: @footer-height;
+}
+#footer {
+  position: absolute;
+  height: @footer-height;
+  bottom: 0;
+}
 .form-container { max-width: 480px; }

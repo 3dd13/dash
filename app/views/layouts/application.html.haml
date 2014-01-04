@@ -8,15 +8,16 @@
     = csrf_meta_tags
 
   %body
-    = render '/layouts/navbar'
-    - if notice
-      %p.notice.alert.alert-info= notice
-    - if alert
-      %p.alert.alert.alert-warning= alert
+    #header.container
+      = render '/layouts/navbar'
+      - if notice
+        %p.notice.alert.alert-info= notice
+      - if alert
+        %p.alert.alert.alert-warning= alert
 
     #content.container{class: "#{controller_name} #{action_name}"}
       = yield
 
-    .container
+    #footer.container
       %footer
         %p © Company 2013
