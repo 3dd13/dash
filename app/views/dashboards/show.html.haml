@@ -34,10 +34,15 @@
             %h4 From:
             = f.fields_for :point_a do |l|
               = l.text_field :address, placeholder: "From", class: "form-control input-lg", id: 'origin_address'
+              = l.hidden_field :latitude, id: 'origin_latitude'
+              = l.hidden_field :longitude, id: 'origin_longitude'
+
           .form-group
             %h4 To:
             = f.fields_for :point_b do |l|
               = l.text_field :address, placeholder: "To", class: "form-control input-lg", id: 'destination_address'
+              = l.hidden_field :latitude, id: 'destination_latitude'
+              = l.hidden_field :longitude, id: 'destination_longitude'
           %h4
             This route passes through
             %span.camera_count
@@ -60,16 +65,19 @@
       markers: gon.markers,
 
       on_route_ready: function(event, data){
-
         $('.km').text(': '+(data.distance/1000).toFixed(2)+'km');
         $('.min').text('/ '+(data.duration/60).toFixed(2)+'min');
-        if (data.addresses.origin) {
-          $('input#dashboard_point_a').val(data.addresses.origin);
-          $('input#origin_address').val(data.addresses.origin);
+        if (data.origin.address) {
+          $('input#dashboard_point_a').val(data.origin.address);
+          $('input#origin_address').val(data.origin.address);
+          $('input#origin_latitude').val(data.origin.location.lat());
+          $('input#origin_longitude').val(data.origin.location.lng());
         }
-        if (data.addresses.destination) {
-          $('input#dashboard_point_b').val(data.addresses.destination);
-          $('input#destination_address').val(data.addresses.destination);
+        if (data.destination.address) {
+          $('input#dashboard_point_b').val(data.destination.address);
+          $('input#destination_address').val(data.destination.address);
+          $('input#destination_latitude').val(data.destination.location.lat());
+          $('input#destination_longitude').val(data.destination.location.lng());
         }
       },
 
@@ -91,7 +99,13 @@
 
       m.dashboard( 'new_route', origin_address, destination_address );
       $('input#origin_address').val(origin_address);
+      $('input#origin_latitude').val(null);
+      $('input#origin_longitude').val(null);
+
       $('input#destination_address').val(destination_address);
+      $('input#destination_latitude').val(null);
+      $('input#destination_longitude').val(null);
+
       event.preventDefault();
     })
 

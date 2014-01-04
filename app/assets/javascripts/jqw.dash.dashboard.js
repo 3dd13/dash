@@ -26,7 +26,7 @@ $.widget("dash.dashboard", {
         poly = new google.maps.Polyline({ path: path }),
         result = { onpath: [], offpath: [] };
 
-    if (typeof tol === 'undefined') { tol = 1.5e-3 }
+    if (typeof tol === 'undefined') { tol = 5e-4 }
     $.each(markers, function(i,m){
       var point = new google.maps.LatLng(m.lat, m.lng),
           onEdge = google.maps.geometry.poly.isLocationOnEdge,
@@ -105,7 +105,8 @@ $.widget("dash.dashboard", {
           that._trigger('on_route_ready', null, {
             distance: leg.distance.value,
             duration: leg.duration.value,
-            addresses: {origin: null, destination: null}
+            origin: {address: null, location: null},
+            destination: {address: null, location: null}
           });
 
           that._redraw_markers(that.options.markers,path);
@@ -120,14 +121,19 @@ $.widget("dash.dashboard", {
                   var directions = result.directions,
                       leg = directions.routes[0].legs[0],
                       path = directions.routes[0].overview_path,
-                      addresses = {origin: null, destination: null};
+                      origin = {address: null, location: null},
+                      destination = {address: null, location: null};
 
-                  addresses.origin = leg.start_address;
-                  addresses.destination = leg.end_address;
+                  origin.address = leg.start_address;
+                  origin.location = leg.start_location;
+                  destination.address = leg.end_address;
+                  destination.location = leg.end_location;
+
                   that._trigger('on_route_ready', null, {
                     distance: leg.distance.value,
                     duration: leg.duration.value,
-                    addresses: addresses
+                    origin: origin,
+                    destination: destination
                   });
 
                   that._redraw_markers(that.options.markers,path);
