@@ -17,7 +17,7 @@ class DashboardsController < ApplicationController
     gon.origin = @dashboard.point_a.to_latlng
     gon.destination = @dashboard.point_b.to_latlng
     gon.markers = Cam.includes(:location).all.map do |c|
-      c.location.to_latlng.merge( { name: c.name, data: "#{render_to_string partial: 'cam', locals:{cam: c} }" } )
+      c.location.to_latlng.merge( { id: c.id, name: c.name, data: "#{render_to_string partial: 'cam', locals:{cam: c} }" } )
     end
   end
 
@@ -52,10 +52,15 @@ class DashboardsController < ApplicationController
   # PATCH/PUT /dashboards/1
   # PATCH/PUT /dashboards/1.json
   def update
+
+    if (camera_ids = params[:dashboard][:camera_ids])
+      @dashboard.cams = Cam.find(camera_ids.split(','))
+    end
+
     respond_to do |format|
       if @dashboard.update(dashboard_params)
         format.html { redirect_to @dashboard, notice: 'Dashboard was successfully updated.' }
-        format.json { head :no_content }
+        format.json { redirect_to dashboards_path }
       else
         format.html { render action: 'edit' }
         format.json { render json: @dashboard.errors, status: :unprocessable_entity }

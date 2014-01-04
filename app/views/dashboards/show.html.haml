@@ -7,7 +7,7 @@
     %span.km
     %span.min
     %span.camera_count.small
-    %span.small traffic cameras on path
+    %span.small traffic cameras en route
 
   = form_for @dashboard,  html: {class: 'form-inline', role: 'form'} do |f|
     .form-group
@@ -24,17 +24,20 @@
   .modal-dialog
     .modal-content
       = form_for @dashboard,  html: {role: 'form', id: 'dashboard_form'} do |f|
+        = f.hidden_field :camera_ids, id: 'camera_ids', value: ''
         .modal-body
           %button.close{data:{dismiss:'modal'}} &times;
           %h2.modal-title Save Dashboard
           .form-group
-            = f.text_field :name, placeholder: "Dashboard Name", class: "form-control input-lg", value: ''
+            = f.text_field :name, placeholder: "Dashboard Name", class: "form-control input-lg", value: @dashboard.name
           .form-group
             %h4 From:
-            = f.text_field :point_a, placeholder: "From", class: "form-control input-lg", value: @dashboard.point_a.address
+            = f.fields_for :point_a do |l|
+              = l.text_field :address, placeholder: "From", class: "form-control input-lg", id: 'origin_address'
           .form-group
             %h4 To:
-            = f.text_field :point_b, placeholder: "To", class: "form-control input-lg", value: @dashboard.point_b.address
+            = f.fields_for :point_b do |l|
+              = l.text_field :address, placeholder: "To", class: "form-control input-lg", id: 'destination_address'
           %h4
             This route passes through
             %span.camera_count
@@ -50,51 +53,64 @@
 :javascript
 
   $(function(){
+
+    var m = $('#map').dashboard({
+      origin: new google.maps.LatLng(gon.origin.lat, gon.origin.lng),
+      destination: new google.maps.LatLng(gon.destination.lat, gon.destination.lng),
+      markers: gon.markers,
+
+      on_route_ready: function(event, data){
+
+        $('.km').text(': '+(data.distance/1000).toFixed(2)+'km');
+        $('.min').text('/ '+(data.duration/60).toFixed(2)+'min');
+        if (data.addresses.origin) {
+          $('input#dashboard_point_a').val(data.addresses.origin);
+          $('input#origin_address').val(data.addresses.origin);
+        }
+        if (data.addresses.destination) {
+          $('input#dashboard_point_b').val(data.addresses.destination);
+          $('input#destination_address').val(data.addresses.destination);
+        }
+      },
+
+      on_markers_ready: function(event, data){
+        var onpath_cameras = data.onpath,
+            count = onpath_cameras.length,
+            htmls = onpath_cameras.map(function(c) {return c.data}),
+            onpath_camera_ids = $.map(onpath_cameras, function(c){return c.id}).join(',');
+        $('.camera_count').text(count);
+        $('#sidebar').empty().append(htmls);
+        $('input#camera_ids').val(onpath_camera_ids);
+      }
+    });
+
+    // load contents to dashboard form
+    $('input#save').click(function(event){
+      var origin_address = $('input#dashboard_point_a').val(),
+          destination_address = $('input#dashboard_point_b').val();
+
+      m.dashboard( 'new_route', origin_address, destination_address );
+      $('input#origin_address').val(origin_address);
+      $('input#destination_address').val(destination_address);
+      event.preventDefault();
+    })
+
+    // submit dashboard form
     $('#dashboard_form').on('submit',function(e){
       var $form = $(this);
-
       $.ajax({
         type: $form.attr('method'),
         url: $form.attr('action'),
         data: $form.serialize(),
-        success: function(data,status) {
-          if (data.redirect) {
-            window.location.href = data.redirect;
+        dataType: 'json',
+        success: function(data,status,jqXHR) {
+          var redirect = jqXHR.getResponseHeader('X-Xhr-Redirected-To');
+          if (redirect) {
+            window.location.href = redirect;
           }
         }
       });
       e.preventDefault();
     });
+
   });
-
-  var m = $('#map').dashboard({
-    origin: new google.maps.LatLng(gon.origin.lat, gon.origin.lng),
-    destination: new google.maps.LatLng(gon.destination.lat, gon.destination.lng),
-    markers: gon.markers,
-
-    on_route_ready: function(event, data){
-
-      $('.km').text(': '+(data.distance/1000).toFixed(2)+'km');
-      $('.min').text('/ '+(data.duration/60).toFixed(2)+'min');
-      if (data.addresses.origin) {
-        $('input#dashboard_point_a').val(data.addresses.origin);
-      }
-      if (data.addresses.destination) {
-        $('input#dashboard_point_b').val(data.addresses.destination);
-      }
-    },
-
-    on_markers_ready: function(event, data){
-      var onpath_cams = data.onpath,
-          count = onpath_cams.length,
-          htmls = onpath_cams.map(function(c) {return c.data});
-      $('.camera_count').text(count);
-      $('#sidebar').empty().append(htmls);
-    }
-  });
-
-  $('input#save').click(function(event){
-    event.preventDefault();
-    m.dashboard( 'new_route',
-      $('input#dashboard_point_a').val(), $('input#dashboard_point_b').val() );
-  })
