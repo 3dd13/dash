@@ -1,12 +1,21 @@
 .page-header
-  %h2
+  %a.btn.btn-primary.active.pull-right{ :href => dashboards_path } All Dashboards
+  %a.btn.btn-primary.active.pull-right{ :href => edit_dashboard_path(@dashboard) } Edit This
+
+  %h1
     = @dashboard.name
     %span#km
     %span#min
+    #cams.small
 
-    %a.btn.btn-primary.active.pull-right{ :href => dashboards_path } All Dashboards
-    %a.btn.btn-primary.active.pull-right{ :href => edit_dashboard_path(@dashboard) } Edit This
-  %p#cams
+
+  = form_for @dashboard,  html: {class: 'form-inline', role: 'form'} do |f|
+    .form-group
+      = f.text_field :point_a, placeholder: "From", class: "form-control", value: @dashboard.point_a.address
+    .form-group
+      = f.text_field :point_b, placeholder: "To", class: "form-control", value: @dashboard.point_b.address
+    .form-group
+      = f.submit 'save', class: "btn btn-success"
 
   %p#notice= notice
 
@@ -18,14 +27,21 @@
 = include_gon
 :javascript
 
-  $('#map').dashboard({
+  var m = $('#map').dashboard({
     origin: new google.maps.LatLng(gon.origin.lat, gon.origin.lng),
     destination: new google.maps.LatLng(gon.destination.lat, gon.destination.lng),
     markers: gon.markers,
 
     on_route_ready: function(event, data){
+
       $('#km').text(': '+(data.distance/1000).toFixed(2)+'km');
       $('#min').text('/ '+(data.duration/60).toFixed(2)+'min');
+      if (data.addresses.origin) {
+        $('input#dashboard_point_a').val(data.addresses.origin);
+      }
+      if (data.addresses.destination) {
+        $('input#dashboard_point_b').val(data.addresses.destination);
+      }
     },
 
     on_markers_ready: function(event, data){
@@ -34,8 +50,13 @@
           htmls = onpath_cams.map(function(c) {return c.data});
       $('#cams').text(count + ' traffic cameras on path')
       $('#sidebar').empty().append(htmls);
-
     }
   });
 
+  $('input#dashboard_point_a').change(function(){
+    m.dashboard( 'new_route', 'origin', $(this).val() );
+  });
 
+  $('input#dashboard_point_b').change(function(){
+    m.dashboard( 'new_route', 'destination', $(this).val() );
+  });

@@ -26,7 +26,7 @@ $.widget("dash.dashboard", {
         poly = new google.maps.Polyline({ path: path }),
         result = { onpath: [], offpath: [] };
 
-    if (typeof tol === 'undefined') { tol = 1e-3 }
+    if (typeof tol === 'undefined') { tol = 2e-3 }
     $.each(markers, function(i,m){
       var point = new google.maps.LatLng(m.lat, m.lng),
           onEdge = google.maps.geometry.poly.isLocationOnEdge,
@@ -72,9 +72,18 @@ $.widget("dash.dashboard", {
   },
 
   _create: function() {
+    google.maps.visualRefresh = true;
+    this._redraw(this.options.origin, this.options.destination);
+  },
+
+  _redraw: function(origin, destination) {
     var that = this;
 
-    google.maps.visualRefresh = true;
+    this.element.gmap3({
+      clear: {
+        name: ["directionsrenderer"]
+      }
+    });
 
     this.element.gmap3({
       map: {
@@ -84,8 +93,8 @@ $.widget("dash.dashboard", {
       trafficlayer: {},
       getroute: {
         options: {
-          origin: this.options.origin,
-          destination: this.options.destination,
+          origin: origin,
+          destination: destination,
           travelMode: google.maps.DirectionsTravelMode.DRIVING
         },
 
@@ -95,9 +104,13 @@ $.widget("dash.dashboard", {
 
           if (!result) return;
 
+          that.options.origin = leg.start_location;
+          that.options.destination = leg.end_location;
+
           that._trigger('on_route_ready', null, {
             distance: leg.distance.value,
-            duration: leg.duration.value
+            duration: leg.duration.value,
+            addresses: {origin: null, destination: null}
           });
 
           that._redraw_markers(that.options.markers,path);
@@ -109,12 +122,17 @@ $.widget("dash.dashboard", {
               events: {
                 directions_changed: function(result) {
 
-                  var leg = result.directions.routes[0].legs[0],
-                      path = result.directions.routes[0].overview_path;
+                  var directions = result.directions,
+                      leg = directions.routes[0].legs[0],
+                      path = directions.routes[0].overview_path,
+                      addresses = {origin: null, destination: null};
 
+                  addresses.origin = leg.start_address;
+                  addresses.destination = leg.end_address;
                   that._trigger('on_route_ready', null, {
                     distance: leg.distance.value,
-                    duration: leg.duration.value
+                    duration: leg.duration.value,
+                    addresses: addresses
                   });
 
                   that._redraw_markers(that.options.markers,path);
@@ -126,6 +144,7 @@ $.widget("dash.dashboard", {
         }
       }
     });
+
   },
 
   _zoom_all: function(obj) {
@@ -159,5 +178,19 @@ $.widget("dash.dashboard", {
     map.panTo(marker.position);
   },
 
-  _destroy: function() {}
+  _destroy: function() {
+  },
+
+  new_route: function(type_or_address, address) {
+    var that = this,
+        geocoder = new google.maps.Geocoder();
+
+    if (type_or_address === 'origin') {
+      that._redraw(address, that.options.destination);
+    } else if (type_of_address === 'destination') {
+      that._redraw(that.options.origin, address);
+    } else {
+      that._redraw(type_or_address, address);
+    }
+  }
 });
