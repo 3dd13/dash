@@ -15,7 +15,7 @@
     .form-group
       = f.text_field :point_b, placeholder: "To", class: "form-control", value: @dashboard.point_b.address
     .form-group
-      = f.submit 'save', class: "btn btn-success"
+      = f.submit 'save', class: "btn btn-success", id: "save"
 
   %p#notice= notice
 
@@ -53,10 +53,8 @@
     }
   });
 
-  $('input#dashboard_point_a').change(function(){
-    m.dashboard( 'new_route', 'origin', $(this).val() );
-  });
-
-  $('input#dashboard_point_b').change(function(){
-    m.dashboard( 'new_route', 'destination', $(this).val() );
-  });
+  $('input#save').click(function(event){
+    event.preventDefault();
+    m.dashboard( 'new_route',
+      $('input#dashboard_point_a').val(), $('input#dashboard_point_b').val() );
+  })

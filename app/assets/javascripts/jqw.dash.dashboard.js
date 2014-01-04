@@ -26,7 +26,7 @@ $.widget("dash.dashboard", {
         poly = new google.maps.Polyline({ path: path }),
         result = { onpath: [], offpath: [] };
 
-    if (typeof tol === 'undefined') { tol = 2e-3 }
+    if (typeof tol === 'undefined') { tol = 1.5e-3 }
     $.each(markers, function(i,m){
       var point = new google.maps.LatLng(m.lat, m.lng),
           onEdge = google.maps.geometry.poly.isLocationOnEdge,
@@ -80,12 +80,7 @@ $.widget("dash.dashboard", {
     var that = this;
 
     this.element.gmap3({
-      clear: {
-        name: ["directionsrenderer"]
-      }
-    });
-
-    this.element.gmap3({
+      clear: { name: ["directionsrenderer"] },
       map: {
         options: { scrollwheel: false },
         events: { click: $.proxy(this._zoom_all, this) }
@@ -187,7 +182,7 @@ $.widget("dash.dashboard", {
 
     if (type_or_address === 'origin') {
       that._redraw(address, that.options.destination);
-    } else if (type_of_address === 'destination') {
+    } else if (type_or_address === 'destination') {
       that._redraw(that.options.origin, address);
     } else {
       that._redraw(type_or_address, address);
