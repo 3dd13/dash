@@ -4,20 +4,43 @@
 
   %h1
     = @dashboard.name
-    %span#km
-    %span#min
-    %span#cams.small
-
+    %span.km
+    %span.min
+    %span.camera_count.small
+    %span.small traffic cameras on path
 
   = form_for @dashboard,  html: {class: 'form-inline', role: 'form'} do |f|
     .form-group
-      = f.text_field :point_a, placeholder: "From", class: "form-control", value: @dashboard.point_a.address
+      = f.text_field :point_a, placeholder: "From", class: "form-control input-lg", value: @dashboard.point_a.address
     .form-group
-      = f.text_field :point_b, placeholder: "To", class: "form-control", value: @dashboard.point_b.address
+      = f.text_field :point_b, placeholder: "To", class: "form-control input-lg", value: @dashboard.point_b.address
     .form-group
-      = f.submit 'save', class: "btn btn-success", id: "save"
+      %button.btn.btn-primary.btn-lg{data: {toggle: 'modal', target: '#submit'}, type: 'button'} Save
+      = f.submit '', style: "visibility:hidden;", id: "save"
 
   %p#notice= notice
+
+#submit.modal.fade{role: 'dialog', tabindex:"-1"}
+  .modal-dialog
+    .modal-content
+      = form_for @dashboard,  html: {role: 'form', id: 'dashboard_form'} do |f|
+        .modal-body
+          %button.close{data:{dismiss:'modal'}} &times;
+          %h2.modal-title Save Dashboard
+          .form-group
+            = f.text_field :name, placeholder: "Dashboard Name", class: "form-control input-lg", value: ''
+          .form-group
+            %h4 From:
+            = f.text_field :point_a, placeholder: "From", class: "form-control input-lg", value: @dashboard.point_a.address
+          .form-group
+            %h4 To:
+            = f.text_field :point_b, placeholder: "To", class: "form-control input-lg", value: @dashboard.point_b.address
+          %h4
+            This route passes through
+            %span.camera_count
+            traffic cameras.
+          .form-group
+            = f.submit 'Save', class: "btn btn-primary btn-lg btn-block"
 
 #app-body
   #map
@@ -26,6 +49,24 @@
 = include_gon
 :javascript
 
+  $(function(){
+    $('#dashboard_form').on('submit',function(e){
+      var $form = $(this);
+
+      $.ajax({
+        type: $form.attr('method'),
+        url: $form.attr('action'),
+        data: $form.serialize(),
+        success: function(data,status) {
+          if (data.redirect) {
+            window.location.href = data.redirect;
+          }
+        }
+      });
+      e.preventDefault();
+    });
+  });
+
   var m = $('#map').dashboard({
     origin: new google.maps.LatLng(gon.origin.lat, gon.origin.lng),
     destination: new google.maps.LatLng(gon.destination.lat, gon.destination.lng),
@@ -33,8 +74,8 @@
 
     on_route_ready: function(event, data){
 
-      $('#km').text(': '+(data.distance/1000).toFixed(2)+'km');
-      $('#min').text('/ '+(data.duration/60).toFixed(2)+'min');
+      $('.km').text(': '+(data.distance/1000).toFixed(2)+'km');
+      $('.min').text('/ '+(data.duration/60).toFixed(2)+'min');
       if (data.addresses.origin) {
         $('input#dashboard_point_a').val(data.addresses.origin);
       }
@@ -47,7 +88,7 @@
       var onpath_cams = data.onpath,
           count = onpath_cams.length,
           htmls = onpath_cams.map(function(c) {return c.data});
-      $('#cams').text(count + ' traffic cameras on path')
+      $('.camera_count').text(count);
       $('#sidebar').empty().append(htmls);
     }
   });
