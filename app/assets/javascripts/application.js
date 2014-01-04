@@ -17,6 +17,5 @@
 //= require_tree .
 //= require twitter/bootstrap
 //= require maplace.min
-//= require gmaps
 //= require gmap3
 

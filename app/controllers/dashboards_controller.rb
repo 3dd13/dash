@@ -16,21 +16,6 @@ class DashboardsController < ApplicationController
 
     gon.origin = @dashboard.point_a.to_latlng
     gon.destination = @dashboard.point_b.to_latlng
-    gon.markers = Cam.all.map do |c|
-      { id: c.id,
-        details: c.name,
-        infoWindow: { content: render_to_string(partial: 'cam', locals: { cam: c }) }
-      }.merge(c.location.to_latlng)
-    end
-  end
-
-  # GET /dashboards/1/test
-  # GET /dashboards/1/test.json
-  def test
-    @cams = @dashboard.cams
-
-    gon.origin = @dashboard.point_a.to_latlng
-    gon.destination = @dashboard.point_b.to_latlng
     gon.markers = Cam.includes(:location).all.map do |c|
       c.location.to_latlng.merge( { name: c.name, data: "#{render_to_string partial: 'cam', locals:{cam: c} }" } )
     end
