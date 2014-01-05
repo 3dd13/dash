@@ -1,0 +1,76 @@
+#app-body
+  #map
+  #sidebar
+
+= include_gon
+:javascript
+
+  $(function(){
+
+    var m = $('#map').dashboard({
+      origin: new google.maps.LatLng(gon.origin.lat, gon.origin.lng),
+      destination: new google.maps.LatLng(gon.destination.lat, gon.destination.lng),
+      markers: gon.markers,
+      directionRendererOptions: { draggable: #{draggable} },
+
+      on_route_ready: function(event, data){
+        $('.km').text(': '+(data.distance/1000).toFixed(2)+'km');
+        $('.min').text('/ '+(data.duration/60).toFixed(2)+'min');
+        if (data.origin.address) {
+          $('input#origin_address').val(data.origin.address);
+          $('input#origin_latitude').val(data.origin.location.lat());
+          $('input#origin_longitude').val(data.origin.location.lng());
+        }
+        if (data.destination.address) {
+          $('input#destination_address').val(data.destination.address);
+          $('input#destination_latitude').val(data.destination.location.lat());
+          $('input#destination_longitude').val(data.destination.location.lng());
+        }
+      },
+
+      on_markers_ready: function(event, data){
+        var onpath_cameras = data.onpath,
+            count = onpath_cameras.length,
+            htmls = onpath_cameras.map(function(c) {return c.data}),
+            onpath_camera_ids = $.map(onpath_cameras, function(c){return c.id}).join(',');
+        $('.camera_count').text(count);
+        $('#sidebar').empty().append(htmls);
+        $('input#camera_ids').val(onpath_camera_ids);
+      }
+    });
+
+    // load contents to dashboard form
+    $('input#save_dashboard').click(function(event){
+      var $form = $(this).parents('form').first();
+
+      $.ajax({
+        type: $form.attr('method'),
+        url: $form.attr('action'),
+        data: $form.serialize(),
+        dataType: 'json',
+        success: function(data,status,jqXHR) {
+          var redirect = jqXHR.getResponseHeader('X-Xhr-Redirected-To');
+          if (redirect) {
+            window.location.href = redirect;
+          }
+        }
+      });
+
+      event.preventDefault();
+    })
+
+    $('#dashboard_form').on('submit', function(event){
+
+      m.dashboard( 'new_route',
+        $('input#origin_address').val(),
+        $('input#destination_address').val()
+      );
+      $('input#origin_latitude').val(null);
+      $('input#origin_longitude').val(null);
+      $('input#destination_latitude').val(null);
+      $('input#destination_longitude').val(null);
+
+      event.preventDefault();
+    })
+
+  });

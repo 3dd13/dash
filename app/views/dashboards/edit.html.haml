@@ -1,8 +1,5 @@
-.panel.panel-default.form-container
-  .panel-body
-
-    %h1 Editing dashboard
-    = render 'form'
-    = link_to 'Show', @dashboard
-    \|
-    = link_to 'Back', dashboards_path
+.page-header
+  %a.btn.btn-primary.active.pull-right{ :href => dashboards_path } All Dashboards
+  = render partial: 'form'
+  %p#notice= notice
+= render partial: 'gui', locals: { draggable: true }

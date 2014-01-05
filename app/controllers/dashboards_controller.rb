@@ -2,6 +2,7 @@ class DashboardsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_dashboard, only: [:show, :edit, :update, :destroy, :cams, :test]
+  before_action :set_gui, only: [:show, :edit]
 
   # GET /dashboards
   # GET /dashboards.json
@@ -12,20 +13,16 @@ class DashboardsController < ApplicationController
   # GET /dashboards/1
   # GET /dashboards/1.json
   def show
-    @cams = @dashboard.cams
-
-    gon.origin = @dashboard.point_a.to_latlng
-    gon.destination = @dashboard.point_b.to_latlng
-    gon.markers = Cam.includes(:location).all.map do |c|
-      c.location.to_latlng.merge( { id: c.id, name: c.name, data: "#{render_to_string partial: 'cam', locals:{cam: c} }" } )
-    end
   end
 
   # GET /dashboards/new
   def new
     @dashboard = Dashboard.new
-    @dashboard.build_point_a
-    @dashboard.build_point_b
+    @dashboard.build_point_a(
+      address: 'Hong Kong Science Park, Hong Kong', latitude: 22.429198, longitude: 114.208711)
+    @dashboard.build_point_b(
+      address: 'Cyberport, Hong Kong', latitude: 22.258537, longitude: 114.131338)
+    set_gui
   end
 
   # GET /dashboards/1/edit
@@ -35,13 +32,16 @@ class DashboardsController < ApplicationController
   # POST /dashboards
   # POST /dashboards.json
   def create
-    @dashboard = Dashboard.new(dashboard_params)
-    @dashboard.user_id = current_user.id
+    @dashboard = current_user.dashboards.build(dashboard_params)
+    if (camera_ids = params[:dashboard][:camera_ids])
+      @dashboard.cams = Cam.find(camera_ids.split(','))
+    end
 
     respond_to do |format|
       if @dashboard.save
         format.html { redirect_to @dashboard, notice: 'Dashboard was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @dashboard }
+        format.json { redirect_to @dashboard }
+        # format.json { render action: 'show', status: :created, location: @dashboard }
       else
         format.html { render action: 'new' }
         format.json { render json: @dashboard.errors, status: :unprocessable_entity }
@@ -60,7 +60,7 @@ class DashboardsController < ApplicationController
     respond_to do |format|
       if @dashboard.update(dashboard_params)
         format.html { redirect_to @dashboard, notice: 'Dashboard was successfully updated.' }
-        format.json { redirect_to dashboards_path }
+        format.json { redirect_to @dashboard }
       else
         format.html { render action: 'edit' }
         format.json { render json: @dashboard.errors, status: :unprocessable_entity }
@@ -102,4 +102,17 @@ class DashboardsController < ApplicationController
           point_a_attributes: [ :address, :latitude, :longitude ],
           point_b_attributes: [ :address, :latitude, :longitude ])
     end
+
+    def set_gui
+      gon.origin = @dashboard.point_a.to_latlng
+      gon.destination = @dashboard.point_b.to_latlng
+      gon.markers = Cam.includes(:location).all.map do |c|
+        c.location.to_latlng.merge({
+          id: c.id,
+          name: c.name,
+          data: "#{render_to_string partial: 'cam', locals:{cam: c} }"
+        })
+      end
+    end
+
 end

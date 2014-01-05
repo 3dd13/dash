@@ -1,33 +1,28 @@
-= form_for @dashboard do |f|
-  - if @dashboard.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@dashboard.errors.count, "error")} prohibited this dashboard from being saved:"
-      %ul
-        - @dashboard.errors.full_messages.each do |msg|
-          %li= msg
+= form_for @dashboard,  html: {class: 'form-inline', role: 'form', id: 'dashboard_form'} do |f|
+  = f.hidden_field :camera_ids, id: 'camera_ids', value: ''
+  %h1
+    .form-group
+      = f.text_field :name, placeholder: "Enter dashboard name here...", class: "form-control input-lg", value: @dashboard.name
+    %span.km
+    %span.min
+    %span.camera_count.small
+    %span.small traffic cameras en route
 
   .form-group
-    = f.text_field :name, placeholder: "name", class: "form-control"
-
-  %h3 From:
-  = f.fields_for :point_a do |l|
-    = l.hidden_field :marker, value: 'A'
-    .form-group
-      = l.text_field :address, placeholder: "address", class: "form-control"
-    .form-group
-      = l.text_field :latitude, placeholder: "latitude", class: "form-control"
-    .form-group
-      = l.text_field :longitude, placeholder: "longitude", class: "form-control"
-
-  %h3 To:
-  = f.fields_for :point_b do |l|
-    = l.hidden_field :marker, value: 'B'
-    .form-group
-      = l.text_field :address, placeholder: "address", class: "form-control"
-    .form-group
-      = l.text_field :latitude, placeholder: "latitude", class: "form-control"
-    .form-group
-      = l.text_field :longitude, placeholder: "longitude", class: "form-control"
-
-  .actions
-    = f.submit 'Save', :class => "btn btn-block btn-success"
+    = f.fields_for :point_a do |l|
+      = l.text_field :address, placeholder: "From", class: "form-control input-lg", value: @dashboard.point_a.address, id: 'origin_address'
+      = l.hidden_field :marker, value: 'A'
+      = l.hidden_field :latitude, id: 'origin_latitude'
+      = l.hidden_field :longitude, id: 'origin_longitude'
+  .form-group
+    = f.fields_for :point_b do |l|
+      = l.text_field :address, placeholder: "To", class: "form-control input-lg", value: @dashboard.point_b.address, id: 'destination_address'
+      = l.hidden_field :marker, value: 'B'
+      = l.hidden_field :latitude, id: 'destination_latitude'
+      = l.hidden_field :longitude, id: 'destination_longitude'
+  .form-group
+    = f.submit 'Save', class: "btn btn-primary btn-lg", type: "button", id: "save_dashboard"
+    - debugger
+    = link_to 'Cancel', "#{@dashboard.id ? dashboard_path(@dashboard) : dashboards_path}",
+        type: 'button', class: "btn btn-default btn-lg"
+    = f.submit '', style: "visibility:hidden;", id: "update_route"
