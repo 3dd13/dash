@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131219194843) do
+ActiveRecord::Schema.define(version: 20140106063456) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -67,6 +67,19 @@ ActiveRecord::Schema.define(version: 20131219194843) do
 
   add_index "slots", ["cam_id"], name: "index_slots_on_cam_id"
   add_index "slots", ["dashboard_id"], name: "index_slots_on_dashboard_id"
+
+  create_table "tsms", force: true do |t|
+    t.string   "name"
+    t.string   "region"
+    t.string   "road_type"
+    t.string   "road_saturation_level"
+    t.decimal  "traffic_speed"
+    t.datetime "capture_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "tsms", ["name"], name: "index_tsms_on_name"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

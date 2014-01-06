@@ -1,0 +1,29 @@
+.page-header
+  %h2
+    Traffic Speed Maps
+
+%table.table
+  %tr
+    %th Name
+    %th Region
+    %th Road Type
+    %th Start Location
+    %th End Location
+    %th Distance
+    %th Saturation
+    %th Traffic Speed
+    %th Capture Date
+    %th Map
+
+  - @tsms.each do |tsm|
+    %tr{class: tsm_colorize(tsm)}
+      %td= tsm.name
+      %td= tsm.region
+      %td= tsm.road_type
+      %td= "(#{tsm.start_location.latitude},#{tsm.start_location.longitude})"
+      %td= "(#{tsm.end_location.latitude},#{tsm.end_location.longitude})"
+      %td= "#{"%d" % (tsm.start_location.distance_from(tsm.end_location,:km) * 1000) } m"
+      %td= tsm.road_saturation_level
+      %td= "#{"%d" % tsm.traffic_speed} km/h"
+      %td= tsm.capture_date
+      %td= link_to 'map', "https://maps.google.com/maps?saddr=#{tsm.start_location.latitude},#{tsm.start_location.longitude}&daddr=#{tsm.end_location.latitude},#{tsm.end_location.longitude}"

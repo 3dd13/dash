@@ -9,3 +9,4 @@
 require_relative 'seeds/cams'
 require_relative 'seeds/users'
 require_relative 'seeds/dashboards'
+require_relative 'seeds/tsms'
