@@ -1,7 +1,7 @@
 .page-header
   %h2
     My Dashboards
-    %a.btn.btn-primary.active.pull-right{ :href => new_dashboard_path } + Dashboard
+    %a.btn.btn-primary.btn-lg.active.pull-right{ :href => new_dashboard_path } Add Dashboard
 
 %table.table.table-primary
   %tr
@@ -10,8 +10,6 @@
     %th To
     %th Cams
     %th
-    %th
-    %th
 
   - @dashboards.each do |d|
     %tr
@@ -19,9 +17,9 @@
       %td= d.point_a.address
       %td= d.point_b.address
       %td= d.cams.count
-      %td= link_to 'Show', dashboard_path(d)
-      %td= link_to 'Edit', edit_dashboard_path(d)
-      %td= link_to 'Destroy', d, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      %td
+        = link_to 'Show', dashboard_path(d), class: "btn btn-primary"
+        = link_to 'Destroy', d, :method => :delete, :data => { :confirm => 'Are you sure?' }, class: "btn btn-danger"
 
 %br
 

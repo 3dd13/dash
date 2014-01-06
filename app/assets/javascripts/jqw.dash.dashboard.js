@@ -26,7 +26,7 @@ $.widget("dash.dashboard", {
         poly = new google.maps.Polyline({ path: path }),
         result = { onpath: [], offpath: [] };
 
-    if (typeof tol === 'undefined') { tol = 5e-4 }
+    if (typeof tol === 'undefined') { tol = 1e-3 }
     $.each(markers, function(i,m){
       var point = new google.maps.LatLng(m.lat, m.lng),
           onEdge = google.maps.geometry.poly.isLocationOnEdge,
