@@ -1,3 +1,5 @@
+require 'eventmachine'
+
 module TsmFetcher
   def self.start
     Thread.new do
