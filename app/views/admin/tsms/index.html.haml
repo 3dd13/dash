@@ -22,8 +22,8 @@
       %td= tsm.road_type
       %td= "(#{tsm.start_location.latitude},#{tsm.start_location.longitude})"
       %td= "(#{tsm.end_location.latitude},#{tsm.end_location.longitude})"
-      %td= "#{"%d" % (tsm.start_location.distance_from(tsm.end_location,:km) * 1000) } m"
+      %td= distance_m(tsm)
       %td= tsm.road_saturation_level
-      %td= "#{"%d" % tsm.traffic_speed} km/h"
+      %td= traffic_speed_km(tsm)
       %td= tsm.capture_date
       %td= link_to 'map', "https://maps.google.com/maps?saddr=#{tsm.start_location.latitude},#{tsm.start_location.longitude}&daddr=#{tsm.end_location.latitude},#{tsm.end_location.longitude}"

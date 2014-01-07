@@ -13,6 +13,7 @@ Sitemon::Application.routes.draw do
     get 'cams/map' => 'cams#map'
     resources :cams
     get 'tsms' => 'tsms#index'
+    get 'tsms/map' => 'tsms#map'
   end
 
   root :to => "cams#index"

@@ -1,0 +1,41 @@
+#map{style: "widht:100%; height:100%"}
+
+= include_gon
+:javascript
+
+  $(function(){
+    var $map = $('#map'),
+        icon = { path: google.maps.SymbolPath.FORWARD_OPEN_ARROW },
+        infowindow = new google.maps.InfoWindow(),
+        zoom_in = function(obj, event, context){
+          var gm = $map.gmap3('get'),
+              zoom = gm.getZoom();
+
+          // console.dir(context);
+          gm.setZoom(zoom > 15 ? zoom : 15);
+          gm.panTo(event.latLng);
+          infowindow.close();
+          infowindow = new google.maps.InfoWindow({ content: context.data }),
+          infowindow.setPosition(event.latLng);
+          infowindow.open(gm);
+        },
+        opt = {
+          polyline: {
+            events: { click: zoom_in },
+            options: { icons: [ { icon: icon, offset: '100%' } ] }
+          } // polyline
+        }; // opt
+
+
+    $map.gmap3({
+      marker: {
+        values: gon.markers,
+        events: { click: zoom_in }
+      },
+      autofit:{}
+    });
+
+    $.each(gon.polylines, function( i, p ) {
+      $map.gmap3( $.extend(true, p, opt) );
+    });
+  });
