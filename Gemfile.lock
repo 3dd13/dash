@@ -225,6 +225,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   debugger
   devise
+  eventmachine
   factory_girl_rails
   geocoder
   gon

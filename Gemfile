@@ -83,3 +83,4 @@ end
 gem "gon"
 
 gem "nokogiri"
+gem "eventmachine"
