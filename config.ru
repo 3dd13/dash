@@ -2,3 +2,6 @@
 
 require ::File.expand_path('../config/environment',  __FILE__)
 run Rails.application
+
+# for enabling heroku realtime logging
+$stdout.sync = true
