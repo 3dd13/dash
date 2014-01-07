@@ -67,7 +67,10 @@ group :development, :test do
   gem 'sqlite3'
   gem 'debugger'
   gem 'rspec-rails'
-  gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
+  # gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
+  # note heroku does not allow if statement in Gemfile, here we assume
+  # development machine is a Mac
+  gem 'rb-fsevent'
   gem 'growl'
   gem 'guard-rspec'
   gem 'guard-livereload'
