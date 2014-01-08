@@ -2,13 +2,9 @@ module TsmFetcher
   def self.start
     Thread.new do
       EM.run do
-        puts "EmTester says hello from puts"
-        Rails.logger.info "EmTester says hello from Rails.logger"
-        # Tsm.refresh
         EM::PeriodicTimer.new(300) do
-          puts "EmTester says hello from puts"
           Rails.logger.info "EmTester says hello from Rails.logger"
-          # Tsm.refresh
+          Tsm.refresh
         end
       end
     end
