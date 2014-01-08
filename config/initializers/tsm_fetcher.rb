@@ -20,4 +20,4 @@ module TsmFetcher
 
 end
 
-TsmFetcher.start
+# TsmFetcher.start
