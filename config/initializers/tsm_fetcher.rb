@@ -3,7 +3,7 @@ module TsmFetcher
     Thread.new do
       EM.run do
         EM::PeriodicTimer.new(300) do
-          Rails.logger.info "EmTester says hello from Rails.logger"
+          Rails.logger.info "Refresh TSM data"
           Tsm.refresh
         end
       end
