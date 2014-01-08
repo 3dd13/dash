@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Sitemon::Application.load_tasks
+Dash::Application.load_tasks

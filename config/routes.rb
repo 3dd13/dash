@@ -1,4 +1,4 @@
-Sitemon::Application.routes.draw do
+Dash::Application.routes.draw do
 
   post 'dashboards/:id/cams' => 'dashboards#cams'
 

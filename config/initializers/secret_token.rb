@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-Sitemon::Application.config.secret_key_base = 'b5775871f630f50009a6025d6e9afbdd46bcbcf1a6c520779d1902fb15cff070a8ee9dde2fd304b68a649bb644212c3bb2bfbb6acb19e907e4e74a6a4bbb65cc'
+Dash::Application.config.secret_key_base = 'b5775871f630f50009a6025d6e9afbdd46bcbcf1a6c520779d1902fb15cff070a8ee9dde2fd304b68a649bb644212c3bb2bfbb6acb19e907e4e74a6a4bbb65cc'
