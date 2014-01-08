@@ -1,12 +1,14 @@
-require 'eventmachine'
-
 module TsmFetcher
   def self.start
     Thread.new do
       EM.run do
-        Tsm.refresh
+        puts "EmTester says hello from puts"
+        Rails.logger.info "EmTester says hello from Rails.logger"
+        # Tsm.refresh
         EM::PeriodicTimer.new(300) do
-          Tsm.refresh
+          puts "EmTester says hello from puts"
+          Rails.logger.info "EmTester says hello from Rails.logger"
+          # Tsm.refresh
         end
       end
     end
@@ -20,4 +22,4 @@ module TsmFetcher
 
 end
 
-# TsmFetcher.start
+TsmFetcher.start
