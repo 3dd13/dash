@@ -1,6 +1,6 @@
 class DashboardsController < ApplicationController
 
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:new]
   before_action :set_dashboard, only: [:show, :edit, :update, :destroy, :cams, :test]
   before_action :set_gui, only: [:show, :edit]
 
