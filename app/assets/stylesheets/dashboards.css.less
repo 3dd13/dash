@@ -1,9 +1,11 @@
-@app-header-height: 160px;
-@app-sidebar-width: 320px;
+@header-height: 120px;
+@sidebar-width: 320px;
+
+
 
 #content.dashboards {
   .page-header {
-    height: @app-header-height;
+    height: @header-height;
     input.form-control {
       width: 500px;
     }
@@ -11,7 +13,7 @@
 
   #gui {
     position: absolute;
-    top: @app-header-height;
+    top: @header-height;
     left: 15px;
     right: 15px;
     bottom: 0;
@@ -19,7 +21,7 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      right: @app-sidebar-width;
+      right: @sidebar-width;
       left: 0;
     }
     #sidebar {
@@ -27,7 +29,7 @@
       top: 0;
       bottom: 0;
       right: 0;
-      width: @app-sidebar-width;
+      width: @sidebar-width;
       overflow: auto;
 
       .cam {
@@ -38,5 +40,17 @@
         background-repeat: no-repeat;
       }
     }
+  }
+}
+
+#content.dashboards.edit,
+#content.dashboards.new,
+ {
+  .page-header {
+    height: @header-height + 40;
+  }
+
+  #gui {
+    top: @header-height + 40 ;
   }
 }

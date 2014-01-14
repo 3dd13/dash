@@ -78,18 +78,6 @@ class DashboardsController < ApplicationController
     end
   end
 
-  def cams
-    ids = params[:ids].split(/[^\d]/)
-    cams = Cam.includes(:location).find(ids)
-    (@dashboard.cams != cams) and @dashboard.cams = cams
-    cams = cams.map do |c|
-      c.as_json.merge html: "#{render_to_string partial: 'cam', locals: { cam: c }, formats: [:html]}"
-    end
-    respond_to do |format|
-      format.json { render json: cams}
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_dashboard
@@ -104,15 +92,29 @@ class DashboardsController < ApplicationController
     end
 
     def set_gui
-      gon.origin = @dashboard.point_a.to_latlng
-      gon.destination = @dashboard.point_b.to_latlng
-      gon.markers = Cam.includes(:location).all.map do |c|
+      gon.dashboard = {
+        origin: @dashboard.point_a.to_latlng,
+        destination: @dashboard.point_b.to_latlng,
+        markers: markers,
+        marker_template: marker_template
+      }
+    end
+
+    def markers
+      Cam.includes(:location).all.map do |c|
         c.location.to_latlng.merge({
           id: c.id,
           name: c.name,
-          data: "#{render_to_string partial: 'cam', locals:{cam: c} }"
+          data: { id: c.id, uri: c.uri, name: c.name, address: c.address }
         })
       end
     end
 
+    def marker_template
+      <<-EOS
+        <div class='cam' id='{{id}}' style="background-image: url('{{uri}}');">
+          <div class="location"> {{name}}: {{address}} </div>
+        </div>
+      EOS
+    end
 end

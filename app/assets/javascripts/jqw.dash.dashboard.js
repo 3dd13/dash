@@ -3,7 +3,8 @@ $.widget("dash.dashboard", {
   options: {
     origin: new google.maps.LatLng( 22.338962, 114.041126 ),
     destination: new google.maps.LatLng( 22.503359, 114.107044 ),
-    markers: [{id:1, data: '<div>info</div>', lat: 22.413568, lng: 114.112194 }],
+    markers: [{id:1, data: '{}', lat: 22.413568, lng: 114.112194 }],
+    marker_template: '<div></div>',
     icon: {
       pin_a: '/assets/pin_a.png',
       pin_b: '/assets/pin_b.png',
@@ -161,20 +162,22 @@ $.widget("dash.dashboard", {
   _zoom_to_marker: function(marker, event, context){
     var el = this.element,
         map = el.gmap3("get"),
-        infowindow = el.gmap3({get:{name:"infowindow"}});
+        infowindow = el.gmap3({get:{name:"infowindow"}}),
+        template = this.options.marker_template,
+        partial = Cx.partial.render(template, context.data);
 
     if (! infowindow ) {
       el.gmap3({
         infowindow: {
           anchor: marker,
-          option: { content: context.data }
+          option: { content: partial }
         }
       });
       infowindow = el.gmap3({get:{name:"infowindow"}});
     }
 
     infowindow.open(map, marker);
-    infowindow.setContent(context.data);
+    infowindow.setContent(partial);
     map.setZoom(15);
     map.panTo(marker.position);
   },

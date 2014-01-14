@@ -1,5 +1,4 @@
 .page-header
-  %a.btn.btn-primary.btn-lg.active.pull-right{ href: dashboards_path } All My Dashboards
   %a.btn.btn-primary.btn-lg.active.pull-right{ href: edit_dashboard_path(@dashboard)} Edit
 
   %h1
@@ -9,9 +8,11 @@
     %span.camera_count.small
     %span.small traffic cameras en route
 
-  %h3
-    = @dashboard.point_a.address
-    = @dashboard.point_b.address
+  %h4
+    %span.small From
+    = format_address(@dashboard.point_a.address)
+    %span.small to
+    = format_address(@dashboard.point_b.address)
 
   %p#notice= notice
 
