@@ -1,0 +1,17 @@
+#modalSignin.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-body
+        %button.close{type: :button, data: {dismiss: 'modal'}} &times;
+        %h3 Sign in to save dashboard
+        = form_for 'user', url: user_session_path do |f|
+          .form-group
+            = f.email_field :email,
+              :placeholder => 'email',
+              class: 'form-control input-lg'
+          .form-group
+            = f.password_field :password,
+              :placeholder => 'password',
+              class: 'form-control input-lg'
+          = f.submit "Sign in", class: 'btn btn-primary btn-lg btn-block'
+          = link_to 'Sign up', new_user_registration_path

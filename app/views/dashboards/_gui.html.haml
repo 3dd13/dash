@@ -57,7 +57,13 @@
     };
 
     $('#dashboard_form')
-      .submit(refresh_route)
+      .submit(function(e) {
+        refresh_route();
+        if ( $('#header .user-signed-in').length === 0 ) {
+          $('#modalSignin').modal();
+          e.preventDefault();
+        }
+      })
       .keypress(function (e) {
         if ((e.keyCode || e.which) === 13) {
           refresh_route();

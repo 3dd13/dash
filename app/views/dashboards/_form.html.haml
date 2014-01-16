@@ -10,17 +10,18 @@
 
   .form-group
     = f.fields_for :point_a do |l|
-      = l.text_field :address, placeholder: "From", class: "form-control input-lg", value: @dashboard.point_a.address, id: 'origin_address'
+      = l.text_field :address, placeholder: "From", class: "form-control input", value: @dashboard.point_a.address, id: 'origin_address'
       = l.hidden_field :marker, value: 'A'
       = l.hidden_field :latitude, id: 'origin_latitude'
       = l.hidden_field :longitude, id: 'origin_longitude'
   .form-group
     = f.fields_for :point_b do |l|
-      = l.text_field :address, placeholder: "To", class: "form-control input-lg", value: @dashboard.point_b.address, id: 'destination_address'
+      = l.text_field :address, placeholder: "To", class: "form-control input", value: @dashboard.point_b.address, id: 'destination_address'
       = l.hidden_field :marker, value: 'B'
       = l.hidden_field :latitude, id: 'destination_latitude'
       = l.hidden_field :longitude, id: 'destination_longitude'
   .form-group
-    = f.submit 'Save', class: "btn btn-primary btn-lg", id: "save_dashboard"
-    = link_to 'Cancel', "#{@dashboard.id ? dashboard_path(@dashboard) : dashboards_path}",
-        type: 'button', class: "btn btn-default btn-lg"
+    = f.submit 'Save', class: "btn btn-primary btn", id: "save_dashboard"
+    - if current_user
+      = link_to 'Cancel', "#{@dashboard.id ? dashboard_path(@dashboard) : dashboards_path}",
+          type: 'button', class: "btn btn-default btn"
