@@ -20,8 +20,8 @@
       directionRendererOptions: { draggable: #{draggable} },
 
       on_route_ready: function(event, data){
-        $('.km').text(': '+(data.distance/1000).toFixed(2)+'km');
-        $('.min').text('/ '+(data.duration/60).toFixed(2)+'min');
+        $('.km').text((data.distance/1000).toFixed(2));
+        $('.min').text((data.duration/60).toFixed(0));
         if (data.origin.address) {
           $('input#origin_address').val(data.origin.address);
           $('input#origin_latitude').val(data.origin.location.lat());

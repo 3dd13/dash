@@ -1,14 +1,28 @@
-@header-height: 120px;
+@header-height: 90px;
 @sidebar-width: 320px;
 
 #content.dashboards {
   .page-header {
+    margin-top: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
     height: @header-height;
-    input.form-control {
-      width: 500px;
-    }
     h1 {
       font-size: 32px
+    }
+    .label {
+      float: right;
+      margin-right: 5px;
+      span { color: white; }
+    }
+    .form-control {
+      height: 35px;
+    }
+    .col-md-1,
+    .col-md-2,
+    .col-md-3 {
+      padding-right: 0;
+      padding-left: 5px;
     }
   }
 
@@ -48,10 +62,10 @@
 #content.dashboards.new,
  {
   .page-header {
-    height: @header-height + 20;
+    height: @header-height + 0;
   }
 
   #gui {
-    top: @header-height + 20 ;
+    top: @header-height + 0 ;
   }
 }

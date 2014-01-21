@@ -1,27 +1,42 @@
-= form_for @dashboard,  html: {class: 'form-inline', role: 'form', id: 'dashboard_form'} do |f|
-  = f.hidden_field :camera_ids, id: 'camera_ids', value: ''
+.row
   %h1
-    .form-group
-      = f.text_field :name, placeholder: "Enter dashboard name here...", class: "form-control input-lg", value: @dashboard.name
-    %span.km
-    %span.min
-    %span.camera_count.small
-    %span.small traffic cameras en route
+    = form_for @dashboard,
+      html: {class: 'form-inline',
+      role: 'form',
+      id: 'dashboard_form'} do |f|
+      = f.hidden_field :camera_ids, id: 'camera_ids', value: ''
+      .form-group.col-md-2
+        = f.text_field :name,
+          placeholder: "Enter dashboard name here...",
+          class: "form-control",
+          value: @dashboard.name
+      = render partial: 'labels'
 
-  .form-group
-    = f.fields_for :point_a do |l|
-      = l.text_field :address, placeholder: "From", class: "form-control input", value: @dashboard.point_a.address, id: 'origin_address'
-      = l.hidden_field :marker, value: 'A'
-      = l.hidden_field :latitude, id: 'origin_latitude'
-      = l.hidden_field :longitude, id: 'origin_longitude'
-  .form-group
-    = f.fields_for :point_b do |l|
-      = l.text_field :address, placeholder: "To", class: "form-control input", value: @dashboard.point_b.address, id: 'destination_address'
-      = l.hidden_field :marker, value: 'B'
-      = l.hidden_field :latitude, id: 'destination_latitude'
-      = l.hidden_field :longitude, id: 'destination_longitude'
-  .form-group
-    = f.submit 'Save', class: "btn btn-primary btn", id: "save_dashboard"
-    - if current_user
-      = link_to 'Cancel', "#{@dashboard.id ? dashboard_path(@dashboard) : dashboards_path}",
-          type: 'button', class: "btn btn-default btn"
+      .form-group.col-md-3
+        = f.fields_for :point_a do |l|
+          = l.text_field :address,
+            placeholder: "From",
+            class: "form-control input",
+            value: @dashboard.point_a.address,
+            id: 'origin_address'
+          = l.hidden_field :marker, value: 'A'
+          = l.hidden_field :latitude, id: 'origin_latitude'
+          = l.hidden_field :longitude, id: 'origin_longitude'
+
+      .form-group.col-md-3
+        = f.fields_for :point_b do |l|
+          = l.text_field :address,
+            placeholder: "To",
+            class: "form-control input",
+            value: @dashboard.point_b.address,
+            id: 'destination_address'
+          = l.hidden_field :marker, value: 'B'
+          = l.hidden_field :latitude, id: 'destination_latitude'
+          = l.hidden_field :longitude, id: 'destination_longitude'
+
+      .form-group.col-md-1
+        .btn-group
+          = f.submit 'Save', class: "btn btn-primary btn", id: "save_dashboard"
+          - if current_user
+            = link_to 'X', "#{@dashboard.id ? dashboard_path(@dashboard) : dashboards_path}",
+              type: 'button', class: "btn btn-default btn"

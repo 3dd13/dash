@@ -1,18 +1,18 @@
 .page-header
-  %a.btn.btn-primary.btn-lg.active.pull-right{ href: edit_dashboard_path(@dashboard)} Edit
+  .row
+    %h1
+      %form.form.form-inline
+        .form-group.col-md-2
+          .form-control{disabled: ''}= @dashboard.name
+        .form-group.col-md-3
+          .form-control{disabled: ''}=format_address(@dashboard.point_a.address)
+        .form-group.col-md-3
+          .form-control{disabled: ''}=format_address(@dashboard.point_b.address)
+        .form-group.col-md-1
+          %a.btn.btn-primary.active{ href: edit_dashboard_path(@dashboard)} Edit
 
-  %h1
-    = @dashboard.name
-    %span.km
-    %span.min
-    %span.camera_count.small
-    %span.small traffic cameras en route
-
-  %h4
-    %span.small From
-    = format_address(@dashboard.point_a.address)
-    %span.small to
-    = format_address(@dashboard.point_b.address)
+      .col-md-3
+        = render partial: 'labels'
 
   %p#notice= notice
 
